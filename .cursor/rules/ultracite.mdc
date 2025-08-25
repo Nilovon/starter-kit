@@ -1,0 +1,157 @@
+# Ultracite Development Standards
+
+## Project Context
+
+Ultracite enforces strict type safety, accessibility standards, and consistent code quality for JavaScript/TypeScript projects using Biome's lightning-fast formatter and linter.
+
+## Key Principles
+
+- **Zero configuration required** - Works out of the box
+- **Subsecond performance** - Lightning-fast formatting and linting
+- **Maximum type safety** - Strict TypeScript enforcement
+- **AI-friendly code generation** - Optimized for AI assistance
+
+## Pre-Development Checklist
+
+Before writing any code:
+
+1. ✅ Analyze existing patterns in the codebase
+2. ✅ Consider edge cases and error scenarios
+3. ✅ Follow all rules below strictly
+4. ✅ Validate accessibility requirements
+
+## Core Rules
+
+### Accessibility (a11y) Standards
+
+- **HTML attributes**: Never use `accessKey` on any HTML element
+- **ARIA management**: Don't set `aria-hidden="true"` on focusable elements
+- **Role assignment**: Don't add ARIA roles to elements that don't support them
+- **Interactive elements**: Don't assign non-interactive ARIA roles to interactive HTML elements
+- **Tab navigation**: Don't assign `tabIndex` to non-interactive HTML elements
+- **Form labels**: Ensure label elements have text content and are associated with inputs
+- **Button types**: Always include a `type` attribute for button elements
+- **SVG accessibility**: Always include a `title` element for SVG elements
+- **Alt text**: Give meaningful information for screen readers, avoid "image", "picture", or "photo"
+- **Keyboard support**: Accompany `onClick` with keyboard event handlers
+- **Language**: Always include a `lang` attribute on the html element
+- **Iframe titles**: Always include a `title` attribute for iframe elements
+- **Semantic elements**: Use semantic elements instead of role attributes in JSX
+
+### Code Complexity & Quality
+
+- **Function complexity**: Don't write functions that exceed Cognitive Complexity thresholds
+- **Loop optimization**: Use `for...of` statements instead of `Array.forEach`
+- **Arrow functions**: Prefer arrow functions over function expressions
+- **Unnecessary constructs**: Avoid unnecessary boolean casts, catch clauses, constructors, and continue statements
+- **Variable declarations**: Don't initialize variables to `undefined`
+- **Type constraints**: Don't use `any` or `unknown` as type constraints
+- **Error handling**: Use `isNaN()` when checking for NaN values
+- **Promise handling**: Don't use `await` inside loops
+- **Bitwise operations**: Avoid bitwise operators
+- **Variable shadowing**: Don't let variables shadow names from outer scopes
+
+### React & JSX Best Practices
+
+- **Hook dependencies**: Ensure all dependencies are correctly specified in React hooks
+- **Hook placement**: All React hooks must be called from the top level of component functions
+- **Key props**: Never forget key props in iterators and collection literals
+- **Component definition**: Don't define React components inside other components
+- **Event handlers**: Don't use event handlers on non-interactive elements
+- **Props assignment**: Never assign to React component props
+- **Children handling**: Don't use both `children` and `dangerouslySetInnerHTML` on the same element
+- **Array keys**: Never use Array index in keys
+- **Fragment syntax**: Use `<>...</>` instead of `<Fragment>...</Fragment>`
+
+### TypeScript Best Practices
+
+- **Type annotations**: Don't add type annotations to variables initialized with literal expressions
+- **Non-null assertions**: Don't use the `!` postfix operator
+- **Type exports**: Use `export type` for types, `import type` for type imports
+- **Enum usage**: Don't use TypeScript enums or const enums
+- **Namespace declarations**: Use `namespace` keyword instead of `module` keyword
+- **Interface safety**: Don't declare empty interfaces
+- **Type evolution**: Don't let variables evolve into `any` type through reassignments
+
+### Correctness & Safety
+
+- **Error handling**: Never throw non-Error values
+- **Function returns**: Don't return values from functions with 'void' return type
+- **Control flow**: Don't write unreachable code
+- **Switch statements**: Make switch-case statements exhaustive with default clauses
+- **Import cycles**: Prevent import cycles in your codebase
+- **Sensitive data**: Never hardcode API keys, tokens, or sensitive information
+- **TypeScript directives**: Don't use `@ts-ignore` directive
+- **Object spread**: Use object spread instead of `Object.assign()` when constructing new objects
+- **Array methods**: Use `Array#{indexOf,lastIndexOf}()` instead of `Array#{findIndex,findLastIndex}()`
+
+### Style & Consistency
+
+- **Comparison operators**: Use `===` and `!==` instead of `==` and `!=`
+- **String methods**: Use `String.slice()` instead of `String.substr()` and `String.substring()`
+- **Template literals**: Use template literals over string concatenation when possible
+- **Ternary operators**: Avoid nested ternary expressions
+- **Variable declarations**: Use `const` for variables assigned only once
+- **Function parameters**: Put default and optional parameters last
+- **Switch statements**: Include a `default` clause in all switch statements
+- **Loop optimization**: Use `while` loops when you don't need initializer and update expressions
+
+### Next.js Specific Rules
+
+- **Image handling**: Don't use `<img>` elements in Next.js projects
+- **Head management**: Don't use `<head>` elements in Next.js projects
+- **Document imports**: Don't import `next/document` outside of `pages/_document.jsx`
+- **Head module**: Don't use `next/head` module in `pages/_document.js`
+
+### Testing Best Practices
+
+- **Test exports**: Don't use export or module.exports in test files
+- **Test focus**: Don't use focused tests
+- **Assertion placement**: Ensure assertion functions are placed inside `it()` function calls
+- **Test status**: Don't use disabled tests
+
+## Common Commands
+
+- `npx ultracite init` - Initialize Ultracite in your project
+- `npx ultracite format` - Format and fix code automatically
+- `npx ultracite lint` - Check for issues without fixing
+
+## Error Handling Examples
+
+### ✅ Good: Comprehensive Error Handling
+
+```typescript
+try {
+  const result = await fetchData();
+  return { success: true, data: result };
+} catch (error) {
+  console.error("API call failed:", error);
+  return { success: false, error: error.message };
+}
+```
+
+### ❌ Bad: Swallowing Errors
+
+```typescript
+try {
+  return await fetchData();
+} catch (e) {
+  console.log(e);
+}
+```
+
+## Implementation Guidelines
+
+1. **Run Ultracite** before committing any code
+2. **Fix all linting errors** before deployment
+3. **Maintain accessibility standards** for all user-facing components
+4. **Follow TypeScript best practices** for type safety
+5. **Use consistent formatting** across the entire codebase
+   return await fetchData();
+   } catch (e) {
+   console.log(e);
+   }
+
+```
+
+```

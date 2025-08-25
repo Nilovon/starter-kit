@@ -11,6 +11,7 @@ node_modules
 .env.development.local
 .env.test.local
 .env.production.local
+.vscode
 
 # Testing
 coverage
@@ -25,7 +26,10 @@ coverage
 .next/
 out/
 build
+# generated
+# packages/db/generated
 dist
+
 
 
 # Debug
@@ -36,3 +40,4 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+apps/api2/src/query/builder.ts

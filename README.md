@@ -1,135 +1,196 @@
-# Turborepo starter
+# Nilovon Starterkit
 
-This Turborepo starter is maintained by the Turborepo core team.
+A modern, full-stack starter kit built with [Turborepo](https://turbo.build/repo), [Next.js](https://nextjs.org/), and [TypeScript](https://www.typescriptlang.org/). This monorepo provides everything you need to build scalable applications with best practices and modern tooling.
 
-## Using this example
+## 🚀 Features
 
-Run the following command:
+- **Monorepo Architecture**: Built with Turborepo for efficient development and builds
+- **Full-Stack Ready**: Includes authentication, database, email, and Redis packages
+- **Modern Tech Stack**: Next.js 15, React 19, TypeScript 5, Tailwind CSS 4
+- **Developer Experience**: Biome for linting/formatting, Drizzle for database management
+- **Authentication**: Built-in auth system with multiple providers
+- **Database**: Drizzle ORM with SQLite/PostgreSQL support
+- **Email Templates**: React-based email templates with TypeScript
+- **Caching**: Redis integration for performance optimization
 
-```sh
-npx create-turbo@latest
-```
+## 📦 What's Inside?
 
-## What's inside?
+This Turborepo includes the following packages and applications:
 
-This Turborepo includes the following packages/apps:
+### Apps
 
-### Apps and Packages
+- **`dashboard`**: A Next.js dashboard application with authentication and modern UI
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### Packages
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- **`@nilovon-starterkit/auth`**: Authentication system with Drizzle integration
+- **`@nilovon-starterkit/db`**: Database client and schema definitions
+- **`@nilovon-starterkit/email`**: React-based email templates
+- **`@nilovon-starterkit/redis`**: Redis client and caching utilities
+- **`@nilovon-starterkit/shared`**: Shared utilities and types
+- **`@nilovon-starterkit/typescript-config`**: TypeScript configurations
 
-### Utilities
+## 🛠️ Tech Stack
 
-This Turborepo has some additional tools already setup for you:
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 4
+- **Database**: Drizzle ORM
+- **Authentication**: Custom auth system
+- **Caching**: Redis
+- **Build Tool**: Turborepo
+- **Package Manager**: Bun
+- **Linting/Formatting**: Biome
+- **Testing**: Vitest
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## 🚀 Quick Start
 
-### Build
+### Prerequisites
 
-To build all apps and packages, run the following command:
+- Node.js 20+ or Bun 1.2+
+- Git
 
-```
-cd my-turborepo
+### Installation
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+1. **Clone the repository**
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+   ```bash
+   git clone https://github.com/nilovon/nilovon-starterkit.git
+   cd nilovon-starterkit
+   ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+2. **Install dependencies**
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+   ```bash
+   bun install
+   ```
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+3. **Set up environment variables**
 
-### Develop
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
 
-To develop all apps and packages, run the following command:
+4. **Set up the database**
 
-```
-cd my-turborepo
+   ```bash
+   bun run db:generate
+   bun run db:push
+   ```
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+5. **Start development**
+   ```bash
+   bun run dev
+   ```
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+## 📚 Available Scripts
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Root Level
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+- `bun run dev` - Start all applications in development mode
+- `bun run build` - Build all applications and packages
+- `bun run lint` - Lint all code
+- `bun run format` - Format all code
+- `bun run check-types` - Type check all packages
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+### Database
 
-### Remote Caching
+- `bun run db:generate` - Generate database migrations
+- `bun run db:push` - Push schema changes to database
+- `bun run db:migrate` - Run database migrations
+- `bun run db:studio` - Open Drizzle Studio
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### Development
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+- `bun run email:dev` - Start email development server
+- `bun run auth:db:generate` - Generate auth database migrations
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## 🏗️ Project Structure
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+nilovon-starterkit/
+├── apps/
+│   └── dashboard/          # Next.js dashboard application
+├── packages/
+│   ├── auth/              # Authentication system
+│   ├── db/                # Database client and schema
+│   ├── email/             # Email templates
+│   ├── redis/             # Redis utilities
+│   ├── shared/            # Shared utilities
+│   └── typescript-config/ # TypeScript configurations
+├── turbo.json             # Turborepo configuration
+└── package.json           # Root package configuration
 ```
 
-## Useful Links
+## 🔧 Configuration
 
-Learn more about the power of Turborepo:
+### Environment Variables
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+Create a `.env.local` file in the root directory:
+
+```env
+# Database
+DATABASE_URL="file:./dev.db"
+DIRECT_URL="file:./dev.db"
+
+# Authentication
+AUTH_SECRET="your-secret-key"
+AUTH_URL="http://localhost:3000"
+
+# Redis
+REDIS_URL="redis://localhost:6379"
+
+# App
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+```
+
+### Database
+
+The starter kit uses Drizzle ORM with SQLite by default. To use PostgreSQL:
+
+1. Update your `DATABASE_URL` in `.env.local`
+2. Install PostgreSQL adapter: `bun add postgres`
+3. Update database configuration in `packages/db/drizzle.config.ts`
+
+## 🧪 Development
+
+### Adding New Packages
+
+1. Create a new directory in `packages/`
+2. Initialize with `bun init`
+3. Add to workspace in root `package.json`
+4. Configure in `turbo.json`
+
+### Adding New Apps
+
+1. Create a new directory in `apps/`
+2. Initialize with `bun create next-app` or similar
+3. Add to workspace in root `package.json`
+4. Configure in `turbo.json`
+
+## 📖 Learn More
+
+- [Turborepo Documentation](https://turbo.build/repo/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Drizzle Documentation](https://orm.drizzle.team/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with [Turborepo](https://turbo.build/repo)
+- Powered by [Next.js](https://nextjs.org/)
+- Styled with [Tailwind CSS](https://tailwindcss.com/)
+- Database management with [Drizzle](https://orm.drizzle.team/)

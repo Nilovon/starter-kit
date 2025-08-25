@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "esModuleInterop": true,
+    "strictNullChecks": true
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next",
+    "turbo",
+    ".turbo",
+    "**/node_modules"
+  ],
+  "include": ["apps/**/*", "packages/**/*", "lib"],
+  "skipLibCheck": true,
+  "noResolve": true,
+  "noImplicitAny": false
+}
