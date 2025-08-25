@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Github, Twitter, Globe } from "lucide-react";
+import Link from "next/link";
 
 export function Footer() {
   const links = {
@@ -10,15 +11,21 @@ export function Footer() {
       { name: "Documentation", href: "#docs" },
     ],
     resources: [
-      { name: "GitHub", href: "#" },
-      { name: "Examples", href: "#" },
-      { name: "Community", href: "#" },
-      { name: "Support", href: "#" },
+      { name: "GitHub", href: "https://github.com/nilovon/starter-kit" },
+      { name: "Examples", href: "https://github.com/nilovon/starter-kit" },
+      { name: "Community", href: "https://github.com/nilovon/starter-kit" },
+      { name: "Support", href: "https://github.com/nilovon/starter-kit" },
     ],
     legal: [
-      { name: "Privacy Policy", href: "#" },
-      { name: "Terms of Service", href: "#" },
-      { name: "License", href: "#" },
+      {
+        name: "Privacy Policy",
+        href: "https://github.com/nilovon/starter-kit",
+      },
+      {
+        name: "Terms of Service",
+        href: "https://github.com/nilovon/starter-kit",
+      },
+      { name: "License", href: "https://github.com/nilovon/starter-kit" },
     ],
   };
 
@@ -33,15 +40,21 @@ export function Footer() {
               confidence.
             </p>
             <div className="flex space-x-4">
-              <Button variant="ghost" size="icon">
-                <Github className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <Twitter className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <Globe className="h-5 w-5" />
-              </Button>
+              <Link href="https://github.com/nilovon">
+                <Button variant="ghost" size="icon">
+                  <Github className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="https://x.com/nilovon_tech">
+                <Button variant="ghost" size="icon">
+                  <Twitter className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="https://nilovon.com">
+                <Button variant="ghost" size="icon">
+                  <Globe className="h-5 w-5" />
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -96,7 +109,7 @@ export function Footer() {
 
         <div className="border-t mt-12 pt-8 text-center">
           <p className="text-muted-foreground">
-            © 2024 Nilovon Starter Kit. Built with ❤️ for developers.
+            © 2025 Nilovon Starter Kit. Built with ❤️ for developers.
           </p>
         </div>
       </div>
