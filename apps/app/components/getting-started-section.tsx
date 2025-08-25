@@ -27,7 +27,7 @@ export function GettingStartedSection() {
       title: "Install Dependencies",
       description:
         "Install all required dependencies using your preferred package manager.",
-      code: "npm install && npm run dev",
+      code: "bun install && bun run dev",
       icon: Download,
     },
     {
