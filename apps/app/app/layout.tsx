@@ -1,11 +1,9 @@
 import type React from "react";
 import type { Metadata } from "next";
-// <CHANGE> Replacing ugly fonts with modern, clean alternatives
 import { Geist, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "@/components/theme-provider";
 
-// <CHANGE> Using Geist for clean, modern typography
 const geist = Geist({
   subsets: ["latin"],
   display: "swap",
@@ -33,7 +31,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // <CHANGE> Updated font variables to use Geist
     <html lang="en" className={`${geist.variable} ${jetbrainsMono.variable}`}>
       <body className="font-sans antialiased">
         <ThemeProvider
