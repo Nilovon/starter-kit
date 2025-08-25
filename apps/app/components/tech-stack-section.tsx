@@ -28,8 +28,7 @@ export function TechStackSection() {
       category: "Development",
       technologies: [
         { name: "Turbo Repo", description: "High-performance monorepo" },
-        { name: "ESLint", description: "Code linting and formatting" },
-        { name: "Prettier", description: "Code formatting" },
+        { name: "Biome", description: "Code linting and formatting" },
         { name: "Husky", description: "Git hooks for quality control" },
       ],
     },
