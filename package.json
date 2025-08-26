@@ -1,10 +1,7 @@
 {
 	"name": "starter",
 	"private": true,
-	"workspaces": [
-		"apps/*",
-		"packages/*"
-	],
+	"type": "module",
 	"scripts": {
 		"check": "oxlint",
 		"ruler:apply": "pnpm dlx @intellectronica/ruler@latest apply --local-only",
