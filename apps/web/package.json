@@ -32,5 +32,9 @@
     "@types/react-dom": "^19",
     "tailwindcss": "^4.1.10",
     "typescript": "^5"
-  }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+	"packageManager": "pnpm@10.6.5"
 }

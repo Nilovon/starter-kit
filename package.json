@@ -35,5 +35,8 @@
 			"pnpm dlx ultracite format"
 		]
 	},
+  "engines": {
+    "node": ">=20"
+  },
 	"packageManager": "pnpm@10.6.5"
 }
