@@ -2,24 +2,24 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {
-		name: "Nilvon Starter Kit",
-		short_name: "starter",
-		description: "Nilvon Starter Kit - A modern TurboRepo starter kit with NextJS, ElysiaJS, Better Auth, and Drizzle. Bootstrap your applications with confidence and ship faster.",
-		start_url: "/",
-		display: "standalone",
-		background_color: "#ffffff",
-		theme_color: "#000000",
-		icons: [
-			{
-				src: "/favicon/favicon.ico",
-				sizes: "192x192",
-				type: "image/png",
-			},
-			{
-				src: "/favicon/web-app-manifest-512x512.png",
-				sizes: "512x512",
-				type: "image/png",
-			},
-		],
-	};
+  name: "Nilovon Starter Kit",
+  short_name: "Nilovon",
+  icons: [
+    {
+      src: "/favicon/web-app-manifest-192x192.png",
+      sizes: "192x192",
+      type: "image/png",
+      purpose: "maskable"
+    },
+    {
+      src: "/favicon/web-app-manifest-512x512.png",
+      sizes: "512x512",
+      type: "image/png",
+      purpose: "maskable"
+    }
+  ],
+  theme_color: "#ffffff",
+  background_color: "#ffffff",
+  display: "standalone"
+}
 }
