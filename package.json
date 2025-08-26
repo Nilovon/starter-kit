@@ -1,85 +1,39 @@
 {
-  "name": "nilovon-starterkit",
-  "version": "0.1.0",
-  "description": "A modern, full-stack starter kit built with Turborepo, Next.js, and TypeScript",
-  "private": true,
-  "author": "Nilovon",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/nilovon/nilovon-starterkit.git"
-  },
-  "homepage": "https://github.com/nilovon/nilovon-starterkit#readme",
-  "bugs": {
-    "url": "https://github.com/nilovon/nilovon-starterkit/issues"
-  },
-  "keywords": [
-    "starterkit",
-    "turborepo",
-    "nextjs",
-    "typescript",
-    "fullstack",
-    "monorepo",
-    "authentication",
-    "database",
-    "email",
-    "redis"
-  ],
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "dotenv -- turbo run dev",
-    "start": "turbo run start",
-    "lint": "npx ultracite@latest lint",
-    "format": "npx ultracite@latest format",
-    "check-types": "turbo run check-types",
-    "db:generate": "turbo run db:generate",
-    "db:push": "dotenv -- turbo run db:push",
-    "db:migrate": "dotenv -- turbo run db:migrate",
-    "db:deploy": "dotenv -- turbo run db:deploy",
-    "db:studio": "dotenv -- turbo run db:studio",
-    "email:dev": "cd packages/email && bun run dev",
-    "auth:db:generate": "cd packages/auth && bun run db:generate"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^2.2.2",
-    "@types/bun": "latest",
-    "dotenv-cli": "^10.0.0",
-    "turbo": "^2.5.6",
-    "ultracite": "^5.2.5"
-  },
-  "engines": {
-    "node": ">=20"
-  },
-  "packageManager": "bun@1.2.21",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "catalog": {
-    "next": "^15.5.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "typescript": "^5.9.2",
-    "zod": "4.1.1",
-    "tailwindcss": "^4.1.4",
-    "dayjs": "^1.11.13",
-    "elysia": "^1.3.4",
-    "pino": "^9.7.0",
-    "vitest": "^3.2.4",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.2.0",
-    "sonner": "^2.0.6",
-    "@biomejs/biome": "^2.2.2",
-    "@types/bun": "latest",
-    "ultracite": "^5.2.5",
-    "turbo": "^2.5.6"
-  },
-  "module": "index.ts",
-  "type": "module",
-  "dependencies": {
-    "@emnapi/core": "^1.4.5",
-    "@tybys/wasm-util": "^0.10.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
-  }
+	"name": "starter",
+	"private": true,
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"scripts": {
+		"check": "oxlint",
+		"ruler:apply": "pnpm dlx @intellectronica/ruler@latest apply --local-only",
+		"dev": "turbo dev",
+		"build": "turbo build",
+		"start": "turbo run start",
+		"check-types": "turbo check-types",
+		"lint": "npx ultracite@latest lint",
+		"format": "npx ultracite@latest format",
+		"dev:native": "turbo -F native dev",
+		"dev:web": "turbo -F web dev",
+		"dev:server": "turbo -F server dev",
+		"db:push": "turbo -F server db:push",
+		"db:studio": "turbo -F server db:studio",
+		"db:generate": "turbo -F server db:generate",
+		"db:migrate": "turbo -F server db:migrate"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.2.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.1.2",
+		"oxlint": "^1.12.0",
+		"turbo": "^2.5.6",
+		"ultracite": "5.2.4"
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
+			"pnpm dlx ultracite format"
+		]
+	},
+	"packageManager": "pnpm@10.6.5"
 }

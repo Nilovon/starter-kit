@@ -1,0 +1,36 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "extends": ["ultracite"],
+  "files": {
+    "includes": ["**", "!**/*.mdx"]
+  },
+  "javascript": {
+    "formatter": {
+      "indentStyle": "tab",
+      "indentWidth": 2
+    },
+    "globals": ["chrome"]
+  },
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noConsole": {
+          "options": {
+            "allow": ["assert", "error", "info", "warn"]
+          }
+        }
+      },
+      "style": {
+        "noNestedTernary": "off"
+      },
+      "assist": {
+        "source": {
+          "organizeImports": "off"
+        }
+      },
+      "performance": {
+        "noBarrelFile": "off"
+      }
+    }
+  }
+}
