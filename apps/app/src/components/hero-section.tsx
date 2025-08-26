@@ -39,7 +39,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            A modern Turbo Repo starter kit with NextJS, ElysiaJS, Better Auth,
+            A modern Turborepo starter kit with NextJS, ElysiaJS, Better Auth,
             and Drizzle. Bootstrap your applications with confidence and ship
             faster.
           </motion.p>

@@ -32,7 +32,7 @@ export function TechStackSection() {
     {
       category: 'Development',
       technologies: [
-        { name: 'Turbo Repo', description: 'High-performance monorepo' },
+        { name: 'Turborepo', description: 'High-performance monorepo' },
         { name: 'Biome', description: 'Code linting and formatting' },
         { name: 'Husky', description: 'Git hooks for quality control' },
       ],

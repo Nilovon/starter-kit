@@ -34,13 +34,13 @@ export function FeaturesSection() {
       icon: Layers,
       title: 'Monorepo Structure',
       description:
-        'Organized Turbo Repo setup for scalable multi-package development.',
+        'Organized Turborepo setup for scalable multi-package development.',
     },
     {
       icon: Settings,
       title: 'Developer Experience',
       description:
-        'ESLint, Prettier, and TypeScript configured for optimal development workflow.',
+        ', Prettier, and TypeScript configured for optimal development workflow.',
     },
     {
       icon: Zap,
