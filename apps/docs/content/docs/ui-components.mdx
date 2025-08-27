@@ -1,0 +1,756 @@
+---
+title: UI Components
+description: Available UI components and usage examples
+---
+
+# 🎨 UI Components
+
+Nilovon Starterkit includes a comprehensive UI component library built with **shadcn/ui** and **Radix UI**. All components are fully accessible, customizable, and follow modern design principles.
+
+## 🚀 Quick Start
+
+### **Installation**
+
+The UI components are already included in the `packages/ui` package and can be imported directly:
+
+```typescript
+import { Button } from "@repo/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@repo/ui/components/card";
+```
+
+### **Basic Usage**
+
+```typescript
+import { Button } from "@repo/ui/components/button";
+
+export function MyComponent() {
+  return (
+    <Button variant="default" size="lg">
+      Click me
+    </Button>
+  );
+}
+```
+
+## 📱 Available Components
+
+### **Form Components**
+
+#### **Button**
+
+```typescript
+import { Button } from "@repo/ui/components/button";
+
+// Variants
+<Button variant="default">Default</Button>
+<Button variant="destructive">Delete</Button>
+<Button variant="outline">Outline</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="link">Link</Button>
+
+// Sizes
+<Button size="sm">Small</Button>
+<Button size="default">Default</Button>
+<Button size="lg">Large</Button>
+<Button size="icon">Icon Only</Button>
+
+// States
+<Button disabled>Disabled</Button>
+<Button loading>Loading...</Button>
+```
+
+#### **Input**
+
+```typescript
+import { Input } from "@repo/ui/components/input";
+
+<Input type="text" placeholder="Enter your name" />
+<Input type="email" placeholder="Enter your email" />
+<Input type="password" placeholder="Enter your password" />
+<Input disabled placeholder="Disabled input" />
+```
+
+#### **Label**
+
+```typescript
+import { Label } from "@repo/ui/components/label";
+
+<Label htmlFor="email">Email</Label>
+<Input id="email" type="email" />
+```
+
+#### **Textarea**
+
+```typescript
+import { Textarea } from "@repo/ui/components/textarea";
+
+<Textarea placeholder="Enter your message" />
+<Textarea disabled placeholder="Disabled textarea" />
+```
+
+#### **Select**
+
+```typescript
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@repo/ui/components/select";
+
+<Select>
+  <SelectTrigger>
+    <SelectValue placeholder="Select a fruit" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="apple">Apple</SelectItem>
+    <SelectItem value="banana">Banana</SelectItem>
+    <SelectItem value="orange">Orange</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+#### **Checkbox**
+
+```typescript
+import { Checkbox } from "@repo/ui/components/checkbox";
+
+<Checkbox id="terms" />
+<Label htmlFor="terms">Accept terms and conditions</Label>
+```
+
+#### **Radio Group**
+
+```typescript
+import { RadioGroup, RadioGroupItem } from "@repo/ui/components/radio-group";
+
+<RadioGroup defaultValue="option-one">
+  <div className="flex items-center space-x-2">
+    <RadioGroupItem value="option-one" id="option-one" />
+    <Label htmlFor="option-one">Option One</Label>
+  </div>
+  <div className="flex items-center space-x-2">
+    <RadioGroupItem value="option-two" id="option-two" />
+    <Label htmlFor="option-two">Option Two</Label>
+  </div>
+</RadioGroup>
+```
+
+### **Layout Components**
+
+#### **Card**
+
+```typescript
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@repo/ui/components/card";
+
+<Card>
+  <CardHeader>
+    <CardTitle>Card Title</CardTitle>
+    <CardDescription>Card description goes here</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>Card content goes here</p>
+  </CardContent>
+  <CardFooter>
+    <Button>Action</Button>
+  </CardFooter>
+</Card>
+```
+
+#### **Container**
+
+```typescript
+import { Container } from "@repo/ui/components/container";
+
+<Container>
+  <h1>Your content here</h1>
+  <p>This content is properly contained and centered</p>
+</Container>
+```
+
+#### **Grid**
+
+```typescript
+import { Grid } from "@repo/ui/components/grid";
+
+<Grid cols={3} gap={4}>
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</Grid>
+```
+
+#### **Stack**
+
+```typescript
+import { Stack } from "@repo/ui/components/stack";
+
+<Stack gap={4}>
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</Stack>
+```
+
+#### **Divider**
+
+```typescript
+import { Separator } from "@repo/ui/components/separator";
+
+<div>
+  <p>Content above</p>
+  <Separator className="my-4" />
+  <p>Content below</p>
+</div>
+```
+
+### **Interactive Components**
+
+#### **Modal/Dialog**
+
+```typescript
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@repo/ui/components/dialog";
+
+<Dialog>
+  <DialogTrigger asChild>
+    <Button>Open Dialog</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Dialog Title</DialogTitle>
+      <DialogDescription>
+        Dialog description goes here
+      </DialogDescription>
+    </DialogHeader>
+    <p>Dialog content goes here</p>
+  </DialogContent>
+</Dialog>
+```
+
+#### **Dropdown Menu**
+
+```typescript
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@repo/ui/components/dropdown-menu";
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="outline">Open Menu</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>Profile</DropdownMenuItem>
+    <DropdownMenuItem>Settings</DropdownMenuItem>
+    <DropdownMenuItem>Logout</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+#### **Tabs**
+
+```typescript
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
+
+<Tabs defaultValue="account" className="w-[400px]">
+  <TabsList>
+    <TabsTrigger value="account">Account</TabsTrigger>
+    <TabsTrigger value="password">Password</TabsTrigger>
+  </TabsList>
+  <TabsContent value="account">
+    Account settings content
+  </TabsContent>
+  <TabsContent value="password">
+    Password settings content
+  </TabsContent>
+</Tabs>
+```
+
+#### **Accordion**
+
+```typescript
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@repo/ui/components/accordion";
+
+<Accordion type="single" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Is it accessible?</AccordionTrigger>
+    <AccordionContent>
+      Yes. It adheres to the WAI-ARIA design pattern.
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="item-2">
+    <AccordionTrigger>Is it styled?</AccordionTrigger>
+    <AccordionContent>
+      Yes. It comes with default styles that matches the design system.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+### **Data Display**
+
+#### **Table**
+
+```typescript
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@repo/ui/components/table";
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Name</TableHead>
+      <TableHead>Email</TableHead>
+      <TableHead>Role</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>John Doe</TableCell>
+      <TableCell>john@example.com</TableCell>
+      <TableCell>Admin</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+#### **Badge**
+
+```typescript
+import { Badge } from "@repo/ui/components/badge";
+
+<Badge variant="default">Default</Badge>
+<Badge variant="secondary">Secondary</Badge>
+<Badge variant="destructive">Destructive</Badge>
+<Badge variant="outline">Outline</Badge>
+```
+
+#### **Avatar**
+
+```typescript
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
+
+<Avatar>
+  <AvatarImage src="/avatars/01.png" alt="@username" />
+  <AvatarFallback>JD</AvatarFallback>
+</Avatar>
+```
+
+#### **Progress**
+
+```typescript
+import { Progress } from "@repo/ui/components/progress";
+
+<Progress value={33} className="w-[60%]" />
+```
+
+#### **Skeleton**
+
+```typescript
+import { Skeleton } from "@repo/ui/components/skeleton";
+
+<div className="flex items-center space-x-4">
+  <Skeleton className="h-12 w-12 rounded-full" />
+  <div className="space-y-2">
+    <Skeleton className="h-4 w-[250px]" />
+    <Skeleton className="h-4 w-[200px]" />
+  </div>
+</div>
+```
+
+### **Navigation**
+
+#### **Breadcrumb**
+
+```typescript
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@repo/ui/components/breadcrumb";
+
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/">Home</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/docs">Docs</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage>Components</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+```
+
+#### **Pagination**
+
+```typescript
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@repo/ui/components/pagination";
+
+<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious href="#" />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#">1</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#">2</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#">3</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationEllipsis />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext href="#" />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+```
+
+#### **Navigation Menu**
+
+```typescript
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@repo/ui/components/navigation-menu";
+
+<NavigationMenu>
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger>Getting Started</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <NavigationMenuLink href="/docs/getting-started">
+          Quick Start Guide
+        </NavigationMenuLink>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>
+```
+
+### **Feedback**
+
+#### **Alert**
+
+```typescript
+import { Alert, AlertDescription, AlertTitle } from "@repo/ui/components/alert";
+
+<Alert>
+  <AlertTitle>Heads up!</AlertTitle>
+  <AlertDescription>
+    You can add components to your app using the cli.
+  </AlertDescription>
+</Alert>
+```
+
+#### **Toast**
+
+```typescript
+import { useToast } from "@repo/ui/hooks/use-toast";
+
+const { toast } = useToast();
+
+// Show a toast
+toast({
+  title: "Scheduled: Catch up",
+  description: "Friday, February 10, 2023 at 3:00 PM",
+});
+```
+
+#### **Tooltip**
+
+```typescript
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@repo/ui/components/tooltip";
+
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger>Hover</TooltipTrigger>
+    <TooltipContent>
+      <p>Add to library</p>
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+```
+
+#### **Popover**
+
+```typescript
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@repo/ui/components/popover";
+
+<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="outline">Open popover</Button>
+  </PopoverTrigger>
+  <PopoverContent className="w-80">
+    <div className="grid gap-4">
+      <div className="space-y-2">
+        <h4 className="font-medium leading-none">Dimensions</h4>
+        <p className="text-sm text-muted-foreground">
+          Set the dimensions for the layer.
+        </p>
+      </div>
+    </div>
+  </PopoverContent>
+</Popover>
+```
+
+## 🎨 Customization
+
+### **Theme Customization**
+
+All components use CSS variables that can be customized in your global CSS:
+
+```css
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
+}
+```
+
+### **Component Variants**
+
+Many components support multiple variants that can be customized:
+
+```typescript
+// Custom button variants
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "underline-offset-4 hover:underline text-primary",
+      },
+      size: {
+        default: "h-10 py-2 px-4",
+        sm: "h-9 px-3 rounded-md",
+        lg: "h-11 px-8 rounded-md",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+```
+
+## ♿ Accessibility
+
+All components are built with accessibility in mind:
+
+- **Keyboard Navigation** - Full keyboard support for all interactive elements
+- **Screen Reader Support** - Proper ARIA labels and descriptions
+- **Focus Management** - Clear focus indicators and logical tab order
+- **WCAG 2.1 AA Compliance** - Meets accessibility standards
+
+### **Accessibility Examples**
+
+```typescript
+// Proper labeling
+<Label htmlFor="email">Email Address</Label>
+<Input id="email" type="email" aria-describedby="email-help" />
+<p id="email-help">We'll never share your email with anyone else.</p>
+
+// ARIA attributes
+<Button aria-label="Close dialog" aria-describedby="dialog-description">
+  <X className="h-4 w-4" />
+</Button>
+```
+
+## 🔧 Advanced Usage
+
+### **Compound Components**
+
+Some components use compound component patterns for flexibility:
+
+```typescript
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@repo/ui/components/collapsible";
+
+<Collapsible>
+  <CollapsibleTrigger asChild>
+    <Button variant="ghost" size="sm" className="w-9 p-0">
+      <ChevronDown className="h-4 w-4" />
+      <span className="sr-only">Toggle</span>
+    </Button>
+  </CollapsibleTrigger>
+  <CollapsibleContent className="space-y-2">
+    <div className="px-4 py-2 text-sm">
+      <p>Collapsible content goes here</p>
+    </div>
+  </CollapsibleContent>
+</Collapsible>
+```
+
+### **Custom Hooks**
+
+The UI package includes custom hooks for common functionality:
+
+```typescript
+import { useMobile } from "@repo/ui/hooks/use-mobile";
+
+function MyComponent() {
+  const isMobile = useMobile();
+
+  return (
+    <div className={isMobile ? "mobile-layout" : "desktop-layout"}>
+      Content
+    </div>
+  );
+}
+```
+
+## 📱 Responsive Design
+
+All components are mobile-first and responsive:
+
+```typescript
+// Responsive button sizes
+<Button className="w-full sm:w-auto">
+  Responsive Button
+</Button>
+
+// Responsive grid
+<Grid cols={{ base: 1, sm: 2, lg: 3 }} gap={4}>
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</Grid>
+```
+
+## 🚀 Performance
+
+Components are optimized for performance:
+
+- **Tree Shaking** - Only import what you use
+- **Lazy Loading** - Components load on demand
+- **Memoization** - React.memo for expensive components
+- **Bundle Splitting** - Separate bundles for different component groups
+
+## 📚 Best Practices
+
+### **Do's**
+
+- ✅ Use semantic HTML elements
+- ✅ Provide proper ARIA labels
+- ✅ Test with keyboard navigation
+- ✅ Use consistent spacing and sizing
+- ✅ Follow the design system
+
+### **Don'ts**
+
+- ❌ Don't override component styles unnecessarily
+- ❌ Don't remove accessibility features
+- ❌ Don't use components for unintended purposes
+- ❌ Don't ignore responsive design
+
+---
+
+## 🎯 Next Steps
+
+Now that you understand the UI components, explore:
+
+- **[Authentication](/docs/authentication)** - Learn about the authentication system
+- **[API Reference](/docs/api-reference)** - See how to integrate with the backend
+- **[Development](/docs/development)** - Master the development workflow
+- **[Database](/docs/database)** - Understand data management
+
+---
+
+**🎨 Ready to build beautiful interfaces?** Start by exploring the component examples above, then check out the [shadcn/ui documentation](https://ui.shadcn.com) for more advanced usage patterns.

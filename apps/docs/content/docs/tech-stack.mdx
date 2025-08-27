@@ -1,0 +1,442 @@
+---
+title: Tech Stack
+description: Complete technology overview and dependencies
+---
+
+Nilovon Starterkit is built with a carefully curated selection of modern, production-ready technologies. This page provides a comprehensive overview of all the tools, frameworks, and libraries that power the project.
+
+## 🎯 Frontend Technologies
+
+### **Next.js 15**
+
+- **Latest App Router** - File-based routing with React Server Components
+- **React 19 Integration** - Concurrent features and improved performance
+- **Built-in Optimizations** - Automatic code splitting and image optimization
+- **TypeScript Support** - First-class TypeScript integration
+- **API Routes** - Built-in API endpoint support
+
+**Version**: 15.x.x
+**Purpose**: Full-stack React framework for production applications
+
+### **React 19**
+
+- **Concurrent Features** - Improved rendering performance
+- **Server Components** - Server-side rendering optimization
+- **Streaming** - Progressive loading of components
+- **Hooks** - Modern state management and side effects
+- **TypeScript** - Full type safety for components
+
+**Version**: 19.x.x
+**Purpose**: UI library for building interactive user interfaces
+
+### **Tailwind CSS 4**
+
+- **Utility-First** - Rapid UI development with utility classes
+- **JIT Compilation** - On-demand CSS generation
+- **Responsive Design** - Mobile-first responsive utilities
+- **Dark Mode** - Built-in dark/light theme support
+- **Customization** - Easy theme customization and extension
+
+**Version**: 4.x.x
+**Purpose**: Utility-first CSS framework for rapid UI development
+
+### **shadcn/ui**
+
+- **Component Library** - Beautiful, accessible UI components
+- **Radix UI Primitives** - Unstyled, accessible component primitives
+- **Tailwind Integration** - Seamless Tailwind CSS integration
+- **TypeScript** - Full type safety for all components
+- **Customizable** - Easy component customization and theming
+
+**Purpose**: Modern component library built on Radix UI and Tailwind CSS
+
+---
+
+## 🔌 Backend Technologies
+
+### **Elysia**
+
+- **TypeScript-First** - Built with TypeScript from the ground up
+- **High Performance** - Built on Bun's HTTP server
+- **Plugin System** - Extensible architecture with plugins
+- **oRPC Integration** - Native support for type-safe RPC
+- **WebSocket Support** - Real-time communication capabilities
+
+**Purpose**: High-performance web framework for building APIs
+
+### **oRPC (Object Remote Procedure Call)**
+
+- **Type Safety** - End-to-end type safety between client and server
+- **Automatic Validation** - Runtime type checking and validation
+- **Zero Configuration** - Works out of the box with TypeScript
+- **Multiple Transports** - HTTP, WebSocket, and more
+- **Code Generation** - Automatic client code generation
+
+**Purpose**: Type-safe remote procedure call protocol
+
+### **Drizzle ORM**
+
+- **Type-Safe Queries** - Compile-time SQL validation
+- **Zero Runtime Overhead** - No query builders or runtime overhead
+- **Migration System** - Automatic schema evolution
+- **Multiple Databases** - SQLite, PostgreSQL, MySQL support
+- **Relations** - Type-safe relationship handling
+
+**Purpose**: Type-safe SQL toolkit and ORM
+
+---
+
+## 🗄️ Database Technologies
+
+### **SQLite (Development)**
+
+- **File-Based** - No server setup required
+- **Zero Configuration** - Works out of the box
+- **Fast Development** - Instant database setup
+- **Portable** - Easy to share and version control
+
+**Purpose**: Development and testing database
+
+### **PostgreSQL (Production)**
+
+- **Production Ready** - Enterprise-grade database
+- **Advanced Features** - JSON, full-text search, extensions
+- **Scalability** - Horizontal and vertical scaling
+- **ACID Compliance** - Full transaction support
+
+**Purpose**: Production database for scalable applications
+
+---
+
+## 🚀 Development Tools
+
+### **Turborepo**
+
+- **Monorepo Management** - Efficient monorepo development
+- **Incremental Builds** - Only rebuild what changed
+- **Parallel Execution** - Multiple tasks run simultaneously
+- **Intelligent Caching** - Skip unnecessary work
+- **Remote Caching** - Share builds across team members
+
+**Version**: 2.x.x
+**Purpose**: High-performance build system for JavaScript/TypeScript monorepos
+
+### **pnpm**
+
+- **Package Manager** - Fast, disk space efficient package manager
+- **Workspace Support** - Native monorepo capabilities
+- **Strict Dependencies** - Prevents phantom dependencies
+- **Efficient Storage** - No duplicate packages
+- **Fast Installation** - Optimized package resolution
+
+**Version**: 10.6.5+
+**Purpose**: Fast, efficient package manager with monorepo support
+
+### **TypeScript**
+
+- **Static Typing** - Compile-time type checking
+- **Modern JavaScript** - Latest ECMAScript features
+- **IDE Support** - Excellent editor integration
+- **Type Inference** - Automatic type detection
+- **Strict Mode** - Comprehensive type checking
+
+**Version**: 5.x.x
+**Purpose**: Typed superset of JavaScript
+
+---
+
+## 🎨 UI and Styling
+
+### **Radix UI**
+
+- **Unstyled Components** - Accessible component primitives
+- **Headless** - No default styling, fully customizable
+- **Accessibility** - WCAG 2.1 AA compliant
+- **Keyboard Navigation** - Full keyboard support
+- **Screen Reader** - Screen reader friendly
+
+**Purpose**: Accessible, unstyled UI component primitives
+
+### **Lucide Icons**
+
+- **Beautiful Icons** - Consistent, beautiful icon set
+- **Tree Shaking** - Only import what you use
+- **TypeScript** - Full type safety
+- **Customizable** - Easy color and size customization
+- **Accessible** - Proper ARIA labels and descriptions
+
+**Purpose**: Beautiful, customizable icon library
+
+---
+
+## 🔒 Security and Authentication
+
+### **JWT (JSON Web Tokens)**
+
+- **Stateless** - No server-side session storage
+- **Secure** - Cryptographically signed tokens
+- **Expiration** - Configurable token lifetime
+- **Claims** - Custom user data in tokens
+
+**Purpose**: Secure authentication and authorization
+
+### **bcrypt**
+
+- **Password Hashing** - Secure password storage
+- **Salt Generation** - Automatic salt generation
+- **Configurable** - Adjustable cost factor
+- **Battle-Tested** - Industry standard for password hashing
+
+**Purpose**: Secure password hashing and verification
+
+---
+
+## 📊 Quality and Testing
+
+### **Ultracite**
+
+- **Code Quality** - Comprehensive linting and formatting
+- **Zero Configuration** - Works out of the box
+- **Fast Performance** - Lightning-fast execution
+- **Type Safety** - TypeScript-aware rules
+- **Accessibility** - Built-in accessibility checks
+
+**Version**: 5.2.4
+**Purpose**: Lightning-fast code quality tool
+
+### **Biome**
+
+- **Linting** - JavaScript/TypeScript linting
+- **Formatting** - Code formatting and style enforcement
+- **Performance** - Subsecond performance
+- **Zero Config** - Works out of the box
+- **Modern** - Built for modern JavaScript/TypeScript
+
+**Version**: 2.2.0
+**Purpose**: Fast formatter and linter
+
+### **Oxlint**
+
+- **Performance** - Ultra-fast linting
+- **Rust-Based** - Written in Rust for performance
+- **Comprehensive** - Covers common JavaScript/TypeScript issues
+- **Zero Config** - Minimal configuration required
+
+**Version**: 1.12.0
+**Purpose**: Ultra-fast JavaScript/TypeScript linter
+
+---
+
+## 🐳 DevOps and Deployment
+
+### **Docker**
+
+- **Containerization** - Consistent development environments
+- **Multi-Stage Builds** - Optimized production images
+- **Environment Isolation** - Consistent across all environments
+- **Easy Deployment** - Simple deployment process
+
+**Purpose**: Containerization and environment consistency
+
+### **Husky**
+
+- **Git Hooks** - Automatic pre-commit and pre-push hooks
+- **Quality Gates** - Ensure code quality before commits
+- **Team Consistency** - Enforce standards across team
+- **Easy Setup** - Simple configuration
+
+**Version**: 9.1.7
+**Purpose**: Git hooks for code quality enforcement
+
+### **lint-staged**
+
+- **Staged Files** - Only lint changed files
+- **Performance** - Fast execution on staged changes
+- **Integration** - Works with Husky and other tools
+- **Configurable** - Customize which files to lint
+
+**Version**: 16.1.2
+**Purpose**: Run linters on staged files
+
+---
+
+## 📱 Mobile and PWA
+
+### **PWA Support**
+
+- **Service Workers** - Offline functionality
+- **Manifest** - App-like installation
+- **Responsive Design** - Mobile-first approach
+- **Offline Support** - Works without internet connection
+
+**Purpose**: Progressive web app capabilities
+
+---
+
+## 🔧 Build and Bundling
+
+### **Webpack (Next.js)**
+
+- **Module Bundling** - Bundle JavaScript modules
+- **Code Splitting** - Automatic code splitting
+- **Hot Reloading** - Fast development experience
+- **Optimization** - Production build optimization
+
+**Purpose**: Module bundler for Next.js applications
+
+### **PostCSS**
+
+- **CSS Processing** - Transform CSS with JavaScript
+- **Plugin System** - Extensible CSS processing
+- **Tailwind Integration** - Process Tailwind CSS
+- **Autoprefixer** - Automatic vendor prefixes
+
+**Purpose**: CSS processing and transformation
+
+---
+
+## 📚 Documentation
+
+### **Fumadocs**
+
+- **Modern Docs** - Next.js-based documentation
+- **MDX Support** - Markdown with React components
+- **Search** - Full-text search functionality
+- **Dark Mode** - Theme switching support
+- **Responsive** - Mobile-friendly documentation
+
+**Purpose**: Modern documentation framework
+
+### **MDX**
+
+- **Markdown + JSX** - Markdown with React components
+- **Interactive** - Interactive documentation examples
+- **TypeScript** - Type-safe component usage
+- **Customization** - Easy component customization
+
+**Purpose**: Markdown with React component support
+
+---
+
+## 🚀 Performance and Monitoring
+
+### **Core Web Vitals**
+
+- **LCP** - Largest Contentful Paint optimization
+- **FID** - First Input Delay optimization
+- **CLS** - Cumulative Layout Shift prevention
+- **Performance** - Built-in performance monitoring
+
+**Purpose**: Web performance optimization
+
+### **Bundle Analysis**
+
+- **Size Monitoring** - Track bundle sizes
+- **Dependency Analysis** - Identify large dependencies
+- **Optimization** - Optimize bundle composition
+- **Tree Shaking** - Remove unused code
+
+**Purpose**: Bundle size optimization and monitoring
+
+---
+
+## 🔄 Version Compatibility
+
+### **Node.js**
+
+- **Minimum**: 20.0.0
+- **Recommended**: 20.x.x (LTS)
+- **Features**: ES modules, modern JavaScript features
+
+### **Package Manager**
+
+- **pnpm**: 10.6.5+
+- **npm**: 9.x.x+
+- **yarn**: 1.22.x+
+
+### **Browser Support**
+
+- **Modern Browsers**: Chrome 90+, Firefox 88+, Safari 14+
+- **Mobile**: iOS 14+, Android 10+
+- **Progressive Enhancement**: Graceful degradation for older browsers
+
+---
+
+## 📦 Dependency Management
+
+### **Workspace Structure**
+
+```
+nilovon-starterkit/
+├── apps/                          # Applications
+│   ├── app/                      # Dashboard app
+│   ├── web/                      # Web app
+│   ├── server/                   # Backend server
+│   └── docs/                     # Documentation
+├── packages/                      # Shared packages
+│   ├── ui/                       # UI components
+│   └── typescript-config/        # TypeScript configs
+└── Root dependencies             # Workspace tools
+```
+
+### **Shared Dependencies**
+
+- **Development Tools**: TypeScript, ESLint, Prettier
+- **Build Tools**: Turborepo, Webpack, PostCSS
+- **Quality Tools**: Ultracite, Biome, Oxlint
+- **Testing Tools**: Jest, React Testing Library
+
+### **App-Specific Dependencies**
+
+- **Frontend Apps**: React, Next.js, Tailwind CSS
+- **Backend Server**: Elysia, Drizzle, oRPC
+- **UI Package**: Radix UI, Lucide Icons
+- **Documentation**: Fumadocs, MDX
+
+---
+
+## 🎯 Technology Choices Explained
+
+### **Why These Technologies?**
+
+1. **Performance**: All tools are optimized for speed and efficiency
+2. **Developer Experience**: Excellent tooling and documentation
+3. **Type Safety**: Full TypeScript support across the stack
+4. **Accessibility**: Built-in accessibility features
+5. **Modern Standards**: Latest web standards and best practices
+6. **Community**: Strong community support and ecosystem
+7. **Production Ready**: Battle-tested in production environments
+
+### **Alternative Technologies Considered**
+
+- **Backend**: Express.js, Fastify, Hono
+- **Database**: Prisma, TypeORM, Kysely
+- **Styling**: CSS Modules, Styled Components, Emotion
+- **State Management**: Redux, Zustand, Jotai
+- **Testing**: Vitest, Playwright, Cypress
+
+---
+
+## 🔮 Future Technology Roadmap
+
+### **Short Term (3-6 months)**
+
+- **React 19 Features** - Full concurrent features adoption
+- **Next.js 15** - Latest App Router features
+- **Tailwind CSS 4** - New utility classes and features
+
+### **Medium Term (6-12 months)**
+
+- **Bun Runtime** - Potential migration from Node.js
+- **Edge Computing** - Edge function deployment
+- **Real-time Features** - WebSocket and Server-Sent Events
+
+### **Long Term (12+ months)**
+
+- **AI Integration** - AI-powered features and automation
+- **Microservices** - Service decomposition
+- **Cloud Native** - Kubernetes and cloud deployment
+
+---
+
+**🛠️ Ready to dive deeper?** Explore our [Development](/docs/development) guide to learn how to work with these technologies, or check out the [API Reference](/docs/api-reference) to see how they come together in practice.

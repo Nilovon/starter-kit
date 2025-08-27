@@ -1,0 +1,644 @@
+---
+title: Development
+description: Development workflow, scripts, and best practices
+---
+
+This guide covers the development workflow, available scripts, and best practices for working with Nilovon Starterkit.
+
+## 🚀 Development Workflow
+
+### **1. Project Setup**
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd nilovon-starterkit
+
+# Install dependencies
+pnpm install
+
+# Set up environment variables
+cp apps/app/.env.example apps/app/.env.local
+cp apps/web/.env.example apps/web/.env.local
+cp apps/server/.env.example apps/server/.env.local
+```
+
+### **2. Database Setup**
+
+```bash
+# Push the initial schema
+pnpm run db:push
+
+# Open Drizzle Studio (optional)
+pnpm run db:studio
+```
+
+### **3. Start Development**
+
+```bash
+# Start all applications
+pnpm run dev
+
+# Or start specific apps
+pnpm run dev:app      # Dashboard app only
+pnpm run dev:web      # Web app only
+pnpm run dev:server   # Backend server only
+```
+
+### **4. Development Cycle**
+
+```
+1. Make code changes
+2. Hot reload automatically updates
+3. TypeScript checks run in background
+4. Lint and format before commits
+5. Test your changes
+6. Commit and push
+```
+
+## 📜 Available Scripts
+
+### **Root Level Scripts**
+
+#### **Development**
+
+```bash
+# Start all applications in development mode
+pnpm run dev
+
+# Start specific applications
+pnpm run dev:app      # Dashboard app (port 3000)
+pnpm run dev:web      # Web app (port 3001)
+pnpm run dev:server   # Backend server (port 3002)
+pnpm run dev:native   # Native app (if configured)
+```
+
+#### **Building**
+
+```bash
+# Build all applications
+pnpm run build
+
+# Build specific applications
+pnpm run build:app
+pnpm run build:web
+pnpm run build:server
+pnpm run build:docs
+```
+
+#### **Quality Assurance**
+
+```bash
+# Lint code with Ultracite
+pnpm run lint
+
+# Format code automatically
+pnpm run format
+
+# Check TypeScript types
+pnpm run check-types
+
+# Run Oxlint for additional checks
+pnpm run check
+```
+
+#### **Database Operations**
+
+```bash
+# Push schema changes to database
+pnpm run db:push
+
+# Open Drizzle Studio
+pnpm run db:studio
+
+# Generate Drizzle files
+pnpm run db:generate
+
+# Run database migrations
+pnpm run db:migrate
+```
+
+#### **Production**
+
+```bash
+# Start production builds
+pnpm run start
+
+# Start specific production apps
+pnpm run start:app
+pnpm run start:web
+pnpm run start:server
+```
+
+### **Workspace-Specific Scripts**
+
+#### **Dashboard App (`apps/app`)**
+
+```bash
+# Development
+pnpm --filter app dev
+
+# Build
+pnpm --filter app build
+
+# Start production
+pnpm --filter app start
+
+# Lint
+pnpm --filter app lint
+```
+
+#### **Web App (`apps/web`)**
+
+```bash
+# Development
+pnpm --filter web dev
+
+# Build
+pnpm --filter web build
+
+# Start production
+pnpm --filter web start
+
+# Lint
+pnpm --filter web lint
+```
+
+#### **Backend Server (`apps/server`)**
+
+```bash
+# Development
+pnpm --filter server dev
+
+# Build
+pnpm --filter server build
+
+# Start production
+pnpm --filter server start
+
+# Lint
+pnpm --filter server lint
+```
+
+#### **Documentation (`apps/docs`)**
+
+```bash
+# Development
+pnpm --filter docs dev
+
+# Build
+pnpm --filter docs build
+
+# Start production
+pnpm --filter docs start
+
+# Lint
+pnpm --filter docs lint
+```
+
+## 🏗️ Project Structure
+
+### **Monorepo Organization**
+
+```
+nilovon-starterkit/
+├── 📁 apps/                          # Applications
+│   ├── 🎯 app/                      # Dashboard application
+│   ├── 🌐 web/                      # Web application
+│   ├── 🔌 server/                   # Backend API server
+│   └── 📚 docs/                     # Documentation site
+├── 📁 packages/                      # Shared packages
+│   ├── 🎨 ui/                       # UI component library
+│   └── typescript-config/           # TypeScript configurations
+├── 🐙 Root configuration files
+└── 📁 .github/                      # GitHub workflows (if configured)
+```
+
+### **Application Structure**
+
+Each app follows a similar structure:
+
+```
+apps/[app-name]/
+├── src/
+│   ├── app/                         # Next.js App Router (for Next.js apps)
+│   ├── components/                  # React components
+│   ├── lib/                         # Utilities and configurations
+│   ├── utils/                       # Helper functions
+│   └── index.ts                     # Entry point (for non-Next.js apps)
+├── public/                          # Static assets
+├── package.json                     # Dependencies and scripts
+├── tsconfig.json                    # TypeScript configuration
+└── next.config.ts                   # Next.js configuration (if applicable)
+```
+
+## 🔄 Development Best Practices
+
+### **1. Code Organization**
+
+#### **Component Structure**
+
+```typescript
+// ✅ Good: Organized component structure
+src/
+├── components/
+│   ├── ui/                         # Reusable UI components
+│   ├── features/                   # Feature-specific components
+│   └── layouts/                    # Layout components
+├── hooks/                          # Custom React hooks
+├── lib/                           # Utilities and configurations
+└── types/                         # TypeScript type definitions
+```
+
+#### **File Naming Conventions**
+
+```typescript
+// ✅ Good: Consistent file naming
+components/
+├── user-profile.tsx               # Component files
+├── user-profile.test.tsx          # Test files
+├── user-profile.stories.tsx       # Storybook files
+└── user-profile.module.css        # CSS modules (if used)
+
+// ❌ Bad: Inconsistent naming
+components/
+├── UserProfile.tsx                # Pascal case for files
+├── user_profile.tsx               # Snake case
+└── userProfile.tsx                # Camel case
+```
+
+### **2. TypeScript Best Practices**
+
+#### **Type Definitions**
+
+```typescript
+// ✅ Good: Clear type definitions
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: "user" | "admin";
+  createdAt: Date;
+}
+
+// ❌ Bad: Vague types
+interface User {
+  id: any;
+  email: string;
+  name: string;
+  role: string;
+  createdAt: any;
+}
+```
+
+#### **Component Props**
+
+```typescript
+// ✅ Good: Well-defined component props
+interface ButtonProps {
+  children: React.ReactNode;
+  variant?: "primary" | "secondary" | "outline";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+  onClick?: () => void;
+}
+
+// ❌ Bad: Loose typing
+interface ButtonProps {
+  children: any;
+  variant?: any;
+  size?: any;
+  disabled?: any;
+  onClick?: any;
+}
+```
+
+### **3. State Management**
+
+#### **Local State**
+
+```typescript
+// ✅ Good: Use React hooks for local state
+const [isLoading, setIsLoading] = useState(false);
+const [data, setData] = useState<User[]>([]);
+
+// ❌ Bad: Avoid class components for simple state
+class UserList extends Component {
+  state = { isLoading: false, data: [] };
+}
+```
+
+#### **Global State**
+
+```typescript
+// ✅ Good: Use context for global state when needed
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+```
+
+### **4. API Integration**
+
+#### **oRPC Client Usage**
+
+```typescript
+// ✅ Good: Type-safe API calls
+import { api } from "@/utils/orpc";
+
+const createTodo = async (title: string) => {
+  try {
+    const result = await api.todo.create({ title });
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
+// ❌ Bad: Unstructured API calls
+const createTodo = async (title: string) => {
+  const response = await fetch("/api/todos", {
+    method: "POST",
+    body: JSON.stringify({ title }),
+  });
+  return response.json();
+};
+```
+
+### **5. Error Handling**
+
+#### **Component Error Boundaries**
+
+```typescript
+// ✅ Good: Error boundary for graceful error handling
+class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <ErrorFallback />;
+    }
+
+    return this.props.children;
+  }
+}
+```
+
+#### **Async Error Handling**
+
+```typescript
+// ✅ Good: Proper error handling in async functions
+const fetchData = async () => {
+  try {
+    const data = await api.data.fetch();
+    return { success: true, data };
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+// ❌ Bad: Swallowing errors
+const fetchData = async () => {
+  try {
+    return await api.data.fetch();
+  } catch (error) {
+    console.log(error); // Just logging, not handling
+  }
+};
+```
+
+## 🧪 Testing Strategy
+
+### **Testing Tools**
+
+- **Jest** - Test runner and assertion library
+- **React Testing Library** - Component testing utilities
+- **MSW** - API mocking for integration tests
+- **Playwright** - End-to-end testing (if configured)
+
+### **Testing Structure**
+
+```
+src/
+├── __tests__/                      # Test files
+│   ├── components/                 # Component tests
+│   ├── hooks/                      # Hook tests
+│   ├── utils/                      # Utility tests
+│   └── __mocks__/                  # Mock files
+├── components/
+├── hooks/
+└── utils/
+```
+
+### **Writing Tests**
+
+```typescript
+// ✅ Good: Comprehensive component testing
+import { render, screen, fireEvent } from '@testing-library/react';
+import { Button } from './button';
+
+describe('Button', () => {
+  it('renders with correct text', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByText('Click me')).toBeInTheDocument();
+  });
+
+  it('calls onClick when clicked', () => {
+    const handleClick = jest.fn();
+    render(<Button onClick={handleClick}>Click me</Button>);
+
+    fireEvent.click(screen.getByText('Click me'));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('is disabled when disabled prop is true', () => {
+    render(<Button disabled>Click me</Button>);
+    expect(screen.getByText('Click me')).toBeDisabled();
+  });
+});
+```
+
+## 🔍 Debugging
+
+### **Development Tools**
+
+#### **React Developer Tools**
+
+- Install browser extension for React debugging
+- Inspect component hierarchy and props
+- Monitor state changes and re-renders
+
+#### **TypeScript Debugging**
+
+```typescript
+// Use type assertions for debugging
+const debugValue = someValue as any;
+console.log("Debug value:", debugValue);
+
+// Use type guards for runtime checking
+function isUser(value: unknown): value is User {
+  return typeof value === "object" && value !== null && "id" in value;
+}
+```
+
+#### **Console Debugging**
+
+```typescript
+// ✅ Good: Structured logging
+console.group("API Response");
+console.log("Status:", response.status);
+console.log("Data:", response.data);
+console.log("Headers:", response.headers);
+console.groupEnd();
+
+// ❌ Bad: Unstructured logging
+console.log(response);
+```
+
+### **Common Issues and Solutions**
+
+#### **Port Conflicts**
+
+```bash
+# Find what's using a port
+lsof -i :3000
+
+# Kill the process
+kill -9 <PID>
+
+# Or use a different port
+pnpm run dev:app -- --port 3001
+```
+
+#### **TypeScript Errors**
+
+```bash
+# Check types across the monorepo
+pnpm run check-types
+
+# Check types for a specific app
+pnpm --filter app check-types
+```
+
+#### **Build Issues**
+
+```bash
+# Clear all builds and reinstall
+rm -rf node_modules apps/*/node_modules packages/*/node_modules
+pnpm install
+pnpm run build
+```
+
+## 📝 Code Quality
+
+### **Pre-commit Hooks**
+
+The project uses Husky and lint-staged to ensure code quality:
+
+```json
+{
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
+      "pnpm dlx ultracite format"
+    ]
+  }
+}
+```
+
+### **Quality Checks**
+
+```bash
+# Run all quality checks
+pnpm run lint
+pnpm run format
+pnpm run check-types
+
+# Run specific checks
+pnpm run check              # Oxlint
+pnpm run ruler:apply       # Apply Ruler rules
+```
+
+### **Code Style Guidelines**
+
+- **Indentation**: 2 spaces
+- **Quotes**: Single quotes for strings
+- **Semicolons**: Always use semicolons
+- **Trailing commas**: Use trailing commas in objects and arrays
+- **Line length**: Maximum 100 characters
+
+## 🚀 Performance Optimization
+
+### **Frontend Optimization**
+
+- **Code Splitting**: Use dynamic imports for large components
+- **Image Optimization**: Use Next.js Image component
+- **Bundle Analysis**: Monitor bundle sizes with `@next/bundle-analyzer`
+- **Lazy Loading**: Defer non-critical resources
+
+### **Backend Optimization**
+
+- **Database Queries**: Optimize Drizzle queries
+- **Caching**: Implement Redis caching for frequently accessed data
+- **Connection Pooling**: Efficient database connection management
+- **Rate Limiting**: Prevent API abuse
+
+## 🔄 Git Workflow
+
+### **Branch Naming**
+
+```
+feature/user-authentication
+bugfix/login-validation
+hotfix/security-patch
+chore/update-dependencies
+docs/add-api-documentation
+```
+
+### **Commit Messages**
+
+```
+feat: add user authentication system
+fix: resolve login validation issue
+docs: update API documentation
+chore: update dependencies
+refactor: improve component structure
+```
+
+### **Pull Request Process**
+
+1. Create feature branch from `main`
+2. Make changes and commit with clear messages
+3. Push branch and create pull request
+4. Request code review from team members
+5. Address feedback and make changes
+6. Merge after approval
+
+---
+
+## 🎯 Next Steps
+
+Now that you understand the development workflow, explore:
+
+- **[Database](/docs/database)** - Learn about database operations and schema management
+- **[UI Components](/docs/ui-components)** - Explore the available UI components
+- **[Authentication](/docs/authentication)** - Understand the authentication system
+- **[API Reference](/docs/api-reference)** - Explore the backend APIs
+
+---
+
+**🔧 Ready to start coding?** Follow the [Getting Started](/docs/getting-started) guide to set up your development environment, or dive into the [Apps Overview](/docs/apps-overview) to understand the project structure.

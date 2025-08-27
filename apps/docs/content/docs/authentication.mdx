@@ -1,0 +1,741 @@
+---
+title: Authentication
+description: Built-in auth system and security features
+---
+
+# 🔐 Authentication
+
+Nilovon Starterkit includes a comprehensive authentication system built with security best practices. This guide covers how to implement and use authentication in your applications.
+
+## 🚀 Quick Start
+
+### **Basic Setup**
+
+The authentication system is already configured and ready to use. You can start using it immediately:
+
+```typescript
+import { useAuth } from "@/lib/auth-client";
+
+function MyComponent() {
+  const { user, login, logout, isLoading } = useAuth();
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (!user) {
+    return <button onClick={() => login()}>Sign In</button>;
+  }
+
+  return (
+    <div>
+      <p>Welcome, {user.name}!</p>
+      <button onClick={logout}>Sign Out</button>
+    </div>
+  );
+}
+```
+
+## 🏗️ Architecture Overview
+
+### **Authentication Flow**
+
+```
+1. User Login → 2. Credential Validation → 3. JWT Generation → 4. Token Storage
+     ↓              ↓                    ↓              ↓
+5. Protected Route ← 6. Token Validation ← 7. User Context ← 8. Session Management
+```
+
+### **Security Features**
+
+- **JWT Tokens** - Stateless authentication
+- **Password Hashing** - bcrypt with salt
+- **Rate Limiting** - Prevent brute force attacks
+- **CORS Protection** - Secure cross-origin requests
+- **Input Validation** - Type-safe validation with Zod
+
+## 🔧 Implementation
+
+### **Backend Authentication**
+
+#### **User Schema**
+
+```typescript
+// apps/server/src/db/schema/auth.ts
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+
+export const users = sqliteTable("users", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  name: text("name").notNull(),
+  passwordHash: text("password_hash").notNull(),
+  role: text("role", { enum: ["user", "admin"] }).default("user"),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(Date.now),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).default(Date.now),
+});
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+```
+
+#### **Authentication Logic**
+
+```typescript
+// apps/server/src/lib/auth.ts
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
+
+export class AuthService {
+  // User registration
+  static async register(userData: {
+    email: string;
+    name: string;
+    password: string;
+  }) {
+    const { email, name, password } = userData;
+
+    // Check if user already exists
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .get();
+    if (existingUser) {
+      throw new Error("User already exists");
+    }
+
+    // Hash password
+    const saltRounds = 12;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    // Create user
+    const [user] = await db
+      .insert(users)
+      .values({
+        id: crypto.randomUUID(),
+        email,
+        name,
+        passwordHash,
+      })
+      .returning();
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET!,
+      { expiresIn: "7d" }
+    );
+
+    return { user: { ...user, passwordHash: undefined }, token };
+  }
+
+  // User login
+  static async login(credentials: { email: string; password: string }) {
+    const { email, password } = credentials;
+
+    // Find user
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .get();
+    if (!user) {
+      throw new Error("Invalid credentials");
+    }
+
+    // Verify password
+    const isValidPassword = await bcrypt.compare(password, user.passwordHash);
+    if (!isValidPassword) {
+      throw new Error("Invalid credentials");
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET!,
+      { expiresIn: "7d" }
+    );
+
+    return { user: { ...user, passwordHash: undefined }, token };
+  }
+
+  // Verify JWT token
+  static verifyToken(token: string) {
+    try {
+      return jwt.verify(token, process.env.JWT_SECRET!) as {
+        userId: string;
+        email: string;
+        role: string;
+      };
+    } catch (error) {
+      throw new Error("Invalid token");
+    }
+  }
+}
+```
+
+#### **API Endpoints**
+
+```typescript
+// apps/server/src/routers/auth.ts
+import { router } from "../lib/orpc";
+import { AuthService } from "../lib/auth";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+
+const registerSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(2).max(100),
+  password: z.string().min(8),
+});
+
+export const authRouter = router({
+  login: async (input: unknown) => {
+    const credentials = loginSchema.parse(input);
+    return await AuthService.login(credentials);
+  },
+
+  register: async (input: unknown) => {
+    const userData = registerSchema.parse(input);
+    return await AuthService.register(userData);
+  },
+
+  verify: async (input: { token: string }) => {
+    return await AuthService.verifyToken(input.token);
+  },
+});
+```
+
+### **Frontend Authentication**
+
+#### **Authentication Hook**
+
+```typescript
+// apps/app/src/lib/auth-client.ts
+import { create } from "zustand";
+import { api } from "@/utils/orpc";
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+}
+
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, name: string, password: string) => Promise<void>;
+  logout: () => void;
+  verifyToken: () => Promise<void>;
+}
+
+export const useAuth = create<AuthState>((set, get) => ({
+  user: null,
+  token: null,
+  isLoading: true,
+
+  login: async (email: string, password: string) => {
+    try {
+      const result = await api.auth.login({ email, password });
+      set({ user: result.user, token: result.token });
+
+      // Store token in localStorage
+      localStorage.setItem("auth_token", result.token);
+    } catch (error) {
+      throw new Error("Login failed");
+    }
+  },
+
+  register: async (email: string, name: string, password: string) => {
+    try {
+      const result = await api.auth.register({ email, name, password });
+      set({ user: result.user, token: result.token });
+
+      // Store token in localStorage
+      localStorage.setItem("auth_token", result.token);
+    } catch (error) {
+      throw new Error("Registration failed");
+    }
+  },
+
+  logout: () => {
+    set({ user: null, token: null });
+    localStorage.removeItem("auth_token");
+  },
+
+  verifyToken: async () => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      set({ isLoading: false });
+      return;
+    }
+
+    try {
+      const userData = await api.auth.verify({ token });
+      // Fetch full user data
+      const user = await api.user.getById({ id: userData.userId });
+      set({ user, token, isLoading: false });
+    } catch (error) {
+      // Token is invalid, remove it
+      localStorage.removeItem("auth_token");
+      set({ user: null, token: null, isLoading: false });
+    }
+  },
+}));
+```
+
+#### **Protected Route Component**
+
+```typescript
+// apps/app/src/components/protected-route.tsx
+import { useAuth } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
+
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  requiredRole?: string;
+}
+
+export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
+    redirect("/unauthorized");
+  }
+
+  return <>{children}</>;
+}
+```
+
+#### **Login Form Component**
+
+```typescript
+// apps/app/src/components/login-form.tsx
+import { useState } from "react";
+import { useAuth } from "@/lib/auth-client";
+import { Button } from "@repo/ui/components/button";
+import { Input } from "@repo/ui/components/input";
+import { Label } from "@repo/ui/components/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/components/card";
+
+export function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      await login(email, password);
+      // Redirect to dashboard after successful login
+      window.location.href = "/dashboard";
+    } catch (error) {
+      console.error("Login failed:", error);
+      // Handle error (show toast, etc.)
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Card className="w-[400px]">
+      <CardHeader>
+        <CardTitle>Sign In</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Signing In..." : "Sign In"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+## 🔒 Security Features
+
+### **Password Security**
+
+- **bcrypt Hashing** - Industry-standard password hashing
+- **Salt Generation** - Automatic salt generation for each password
+- **Configurable Cost** - Adjustable hashing strength
+- **Secure Comparison** - Timing-safe password comparison
+
+### **JWT Security**
+
+- **Secret Management** - Environment variable for JWT secret
+- **Token Expiration** - Configurable token lifetime
+- **Claims Validation** - User ID, email, and role in tokens
+- **Secure Storage** - Tokens stored in localStorage (consider httpOnly cookies for production)
+
+### **Rate Limiting**
+
+```typescript
+// apps/server/src/middleware/rate-limit.ts
+import { rateLimit } from "express-rate-limit";
+
+export const authRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per windowMs
+  message: "Too many authentication attempts, please try again later",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+```
+
+### **Input Validation**
+
+```typescript
+// Validation schemas
+const emailSchema = z.string().email("Invalid email address");
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters");
+
+// Use in API endpoints
+const loginSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+});
+```
+
+## 🎯 Role-Based Access Control
+
+### **User Roles**
+
+```typescript
+type UserRole = "user" | "admin" | "moderator";
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+}
+```
+
+### **Role Checking**
+
+```typescript
+// Check if user has required role
+function hasRole(user: User, requiredRole: UserRole): boolean {
+  const roleHierarchy = {
+    user: 1,
+    moderator: 2,
+    admin: 3,
+  };
+
+  return roleHierarchy[user.role] >= roleHierarchy[requiredRole];
+}
+
+// Use in components
+function AdminPanel() {
+  const { user } = useAuth();
+
+  if (!hasRole(user, "admin")) {
+    return <div>Access denied</div>;
+  }
+
+  return <div>Admin panel content</div>;
+}
+```
+
+### **Route Protection**
+
+```typescript
+// apps/app/src/app/admin/layout.tsx
+import { ProtectedRoute } from "@/components/protected-route";
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <ProtectedRoute requiredRole="admin">
+      {children}
+    </ProtectedRoute>
+  );
+}
+```
+
+## 🔄 Session Management
+
+### **Token Refresh**
+
+```typescript
+// Automatic token refresh
+useEffect(() => {
+  const refreshInterval = setInterval(
+    async () => {
+      const token = localStorage.getItem("auth_token");
+      if (token) {
+        try {
+          await api.auth.verify({ token });
+        } catch (error) {
+          // Token expired, logout user
+          logout();
+        }
+      }
+    },
+    5 * 60 * 1000
+  ); // Check every 5 minutes
+
+  return () => clearInterval(refreshInterval);
+}, []);
+```
+
+### **Persistent Sessions**
+
+```typescript
+// Check for existing session on app load
+useEffect(() => {
+  verifyToken();
+}, []);
+```
+
+## 🚀 Advanced Features
+
+### **Social Authentication**
+
+```typescript
+// OAuth integration example
+export const socialAuthRouter = router({
+  google: async (input: { code: string }) => {
+    // Handle Google OAuth
+    const userData = await handleGoogleAuth(input.code);
+    return await AuthService.createOrUpdateUser(userData);
+  },
+
+  github: async (input: { code: string }) => {
+    // Handle GitHub OAuth
+    const userData = await handleGitHubAuth(input.code);
+    return await AuthService.createOrUpdateUser(userData);
+  },
+});
+```
+
+### **Multi-Factor Authentication**
+
+```typescript
+// 2FA implementation
+export const twoFactorRouter = router({
+  enable: async (input: { userId: string }) => {
+    const secret = generateTOTPSecret();
+    const qrCode = generateQRCode(secret);
+    return { secret, qrCode };
+  },
+
+  verify: async (input: { userId: string; token: string }) => {
+    return await verifyTOTPToken(input.userId, input.token);
+  },
+});
+```
+
+### **Password Reset**
+
+```typescript
+// Password reset flow
+export const passwordResetRouter = router({
+  requestReset: async (input: { email: string }) => {
+    const resetToken = generateResetToken();
+    await sendResetEmail(input.email, resetToken);
+    return { success: true };
+  },
+
+  resetPassword: async (input: { token: string; newPassword: string }) => {
+    return await AuthService.resetPassword(input.token, input.newPassword);
+  },
+});
+```
+
+## 📱 Mobile Authentication
+
+### **Biometric Authentication**
+
+```typescript
+// React Native biometric auth
+import * as LocalAuthentication from "expo-local-authentication";
+
+export const useBiometricAuth = () => {
+  const authenticate = async () => {
+    const result = await LocalAuthentication.authenticateAsync({
+      promptMessage: "Authenticate to continue",
+      fallbackLabel: "Use passcode",
+    });
+
+    return result.success;
+  };
+
+  return { authenticate };
+};
+```
+
+## 🔍 Testing Authentication
+
+### **Unit Tests**
+
+```typescript
+// apps/server/src/lib/auth.test.ts
+import { AuthService } from "./auth";
+
+describe("AuthService", () => {
+  it("should hash passwords correctly", async () => {
+    const password = "testpassword123";
+    const hash = await bcrypt.hash(password, 10);
+
+    expect(await bcrypt.compare(password, hash)).toBe(true);
+  });
+
+  it("should generate valid JWT tokens", async () => {
+    const user = { id: "123", email: "test@example.com", role: "user" };
+    const token = jwt.sign(user, process.env.JWT_SECRET!);
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    expect(decoded).toMatchObject(user);
+  });
+});
+```
+
+### **Integration Tests**
+
+```typescript
+// apps/server/src/routers/auth.test.ts
+describe("Auth Router", () => {
+  it("should register new users", async () => {
+    const result = await api.auth.register({
+      email: "test@example.com",
+      name: "Test User",
+      password: "password123",
+    });
+
+    expect(result.user.email).toBe("test@example.com");
+    expect(result.token).toBeDefined();
+  });
+});
+```
+
+## 🚨 Common Issues
+
+### **Token Expiration**
+
+```typescript
+// Handle token expiration gracefully
+const handleApiError = (error: any) => {
+  if (error.status === 401) {
+    // Token expired, redirect to login
+    logout();
+    redirect("/login");
+  }
+};
+```
+
+### **CORS Issues**
+
+```typescript
+// Configure CORS for authentication
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
+```
+
+### **Password Validation**
+
+```typescript
+// Strong password requirements
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+  .regex(/[0-9]/, "Password must contain at least one number")
+  .regex(
+    /[^A-Za-z0-9]/,
+    "Password must contain at least one special character"
+  );
+```
+
+## 📚 Best Practices
+
+### **Security**
+
+- ✅ Use HTTPS in production
+- ✅ Implement rate limiting
+- ✅ Validate all inputs
+- ✅ Use secure session storage
+- ✅ Regular security audits
+
+### **User Experience**
+
+- ✅ Clear error messages
+- ✅ Loading states
+- ✅ Remember user preferences
+- ✅ Smooth authentication flow
+- ✅ Accessible forms
+
+### **Performance**
+
+- ✅ Optimize JWT payload size
+- ✅ Implement token refresh
+- ✅ Cache user data
+- ✅ Lazy load auth components
+- ✅ Minimize API calls
+
+---
+
+## 🎯 Next Steps
+
+Now that you understand authentication, explore:
+
+- **[API Reference](/docs/api-reference)** - See all available API endpoints
+- **[UI Components](/docs/ui-components)** - Build authentication interfaces
+- **[Database](/docs/database)** - Understand user data storage
+- **[Development](/docs/development)** - Master the development workflow
+
+---
+
+**🔐 Ready to secure your app?** Start implementing authentication with the examples above, then customize the system to fit your specific needs.

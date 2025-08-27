@@ -1,0 +1,41 @@
+{
+	"pages": [
+		{
+			"title": "Introduction",
+			"pages": [
+				"index",
+				"getting-started"
+			]
+		},
+		{
+			"title": "Architecture & Overview",
+			"pages": [
+				"architecture",
+				"apps-overview",
+				"tech-stack"
+			]
+		},
+		{
+			"title": "Development",
+			"pages": [
+				"development",
+				"database"
+			]
+		},
+		{
+			"title": "Components & APIs",
+			"pages": [
+				"ui-components",
+				"authentication",
+				"api-reference"
+			]
+		},
+		{
+			"title": "Deployment & Contributing",
+			"pages": [
+				"deployment",
+				"contributing"
+			]
+		}
+	]
+}

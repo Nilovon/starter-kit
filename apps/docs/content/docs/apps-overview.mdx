@@ -1,0 +1,380 @@
+---
+title: Apps Overview
+description: Detailed breakdown of each application in the stack
+---
+
+Nilovon Starterkit includes multiple applications, each designed for specific purposes and optimized for their use cases. This overview explains what each app does and how they work together.
+
+## 🎯 Dashboard App (`apps/app`)
+
+The Dashboard App is a comprehensive Next.js 15 application designed for authenticated users to manage their data and interact with the system.
+
+### **Purpose**
+
+- **User Dashboard** - Central hub for authenticated users
+- **Data Management** - CRUD operations for user data
+- **Admin Interface** - Administrative functions and user management
+- **Real-time Updates** - Live data synchronization
+
+### **Key Features**
+
+- **Authentication Required** - Protected routes and user sessions
+- **Responsive Design** - Works on all device sizes
+- **Dark/Light Mode** - Theme switching with system preference detection
+- **Real-time Updates** - WebSocket integration for live data
+
+### **Technology Stack**
+
+- **Next.js 15** - Latest App Router with React 19
+- **React 19** - Concurrent features and improved performance
+- **Tailwind CSS 4** - Utility-first CSS framework
+- **shadcn/ui** - Beautiful, accessible UI components
+- **TypeScript** - Full type safety
+
+### **File Structure**
+
+```
+apps/app/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── dashboard/          # Dashboard pages
+│   │   ├── login/             # Authentication pages
+│   │   ├── todos/             # Feature pages
+│   │   ├── layout.tsx         # Root layout
+│   │   └── page.tsx           # Homepage
+│   ├── components/             # React components
+│   │   ├── features-section.tsx
+│   │   ├── header.tsx
+│   │   ├── user-menu.tsx
+│   │   └── mode-toggle.tsx
+│   ├── lib/                    # Utilities
+│   │   ├── auth-client.ts     # Authentication client
+│   │   └── utils.ts           # Helper functions
+│   └── utils/                  # API utilities
+│       └── orpc.ts            # oRPC client setup
+├── public/                     # Static assets
+└── package.json
+```
+
+### **Port Configuration**
+
+- **Development**: http://localhost:3000
+- **Production**: Configurable via environment variables
+
+---
+
+## 🌐 Web App (`apps/web`)
+
+The Web App is a public-facing Next.js application designed for marketing, landing pages, and public content.
+
+### **Purpose**
+
+- **Marketing Site** - Company/product information
+- **Landing Pages** - Conversion-focused pages
+- **Public Content** - Blog, documentation, resources
+- **SEO Optimization** - Search engine friendly
+
+### **Key Features**
+
+- **Public Access** - No authentication required
+- **SEO Optimized** - Meta tags, structured data, sitemaps
+- **Performance Focused** - Core Web Vitals optimization
+- **Accessibility** - WCAG 2.1 AA compliance
+
+### **Technology Stack**
+
+- **Next.js 15** - App Router with static generation
+- **React 19** - Server components and streaming
+- **Tailwind CSS 4** - Responsive design system
+- **shadcn/ui** - Consistent component library
+- **TypeScript** - Type-safe development
+
+### **File Structure**
+
+```
+apps/web/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── layout.tsx         # Root layout
+│   │   └── page.tsx           # Homepage
+│   ├── components/             # React components
+│   │   ├── hero-section.tsx   # Hero section
+│   │   ├── features-section.tsx
+│   │   ├── tech-stack-section.tsx
+│   │   ├── footer.tsx
+│   │   └── mode-toggle.tsx
+│   └── lib/                    # Utilities
+│       └── utils.ts           # Helper functions
+├── public/                     # Static assets
+└── package.json
+```
+
+### **Port Configuration**
+
+- **Development**: http://localhost:3001
+- **Production**: Configurable via environment variables
+
+---
+
+## 🔌 Backend Server (`apps/server`)
+
+The Backend Server is an Elysia-based API server that provides the backend infrastructure for all frontend applications.
+
+### **Purpose**
+
+- **API Endpoints** - RESTful and oRPC endpoints
+- **Database Operations** - Data persistence and retrieval
+- **Authentication** - User management and sessions
+- **Business Logic** - Application-specific operations
+
+### **Key Features**
+
+- **Type-safe APIs** - Full TypeScript integration
+- **oRPC Support** - Remote procedure calls with type safety
+- **Database Integration** - Drizzle ORM with multiple database support
+- **Real-time Capabilities** - WebSocket and event streaming
+- **Rate Limiting** - API abuse prevention
+- **CORS Support** - Cross-origin request handling
+
+### **Technology Stack**
+
+- **Elysia** - High-performance web framework
+- **oRPC** - Type-safe RPC protocol
+- **Drizzle ORM** - Type-safe database operations
+- **SQLite/PostgreSQL** - Database support
+- **TypeScript** - Full type safety
+
+### **File Structure**
+
+```
+apps/server/
+├── src/
+│   ├── db/                     # Database layer
+│   │   ├── schema/             # Database schemas
+│   │   │   ├── auth.ts         # Authentication schema
+│   │   │   └── todo.ts         # Todo schema
+│   │   └── index.ts            # Database connection
+│   ├── lib/                     # Core utilities
+│   │   ├── auth.ts             # Authentication logic
+│   │   ├── context.ts          # Request context
+│   │   └── orpc.ts             # oRPC setup
+│   ├── routers/                 # API route handlers
+│   │   ├── index.ts            # Main router
+│   │   └── todo.ts             # Todo endpoints
+│   └── index.ts                # Server entry point
+├── drizzle.config.ts            # Drizzle configuration
+└── package.json
+```
+
+### **Port Configuration**
+
+- **Development**: http://localhost:3002
+- **Production**: Configurable via environment variables
+
+---
+
+## 📚 Documentation (`apps/docs`)
+
+The Documentation site is a Fumadocs-powered documentation platform that provides comprehensive information about the project.
+
+### **Purpose**
+
+- **Project Documentation** - Comprehensive guides and references
+- **API Documentation** - Endpoint documentation and examples
+- **Component Library** - UI component documentation
+- **Getting Started** - Onboarding and tutorials
+
+### **Key Features**
+
+- **Search Functionality** - Full-text search across all content
+- **Responsive Design** - Mobile-friendly documentation
+- **Dark/Light Mode** - Theme switching support
+- **Navigation** - Easy content discovery
+- **Code Highlighting** - Syntax highlighting for code examples
+
+### **Technology Stack**
+
+- **Fumadocs** - Modern documentation framework
+- **Next.js 15** - App Router for routing
+- **Tailwind CSS 4** - Styling and design
+- **TypeScript** - Type-safe development
+- **MDX** - Markdown with React components
+
+### **File Structure**
+
+```
+apps/docs/
+├── content/                     # Documentation content
+│   └── docs/                   # Documentation pages
+│       ├── index.mdx           # Homepage
+│       ├── getting-started.mdx # Getting started guide
+│       ├── architecture.mdx    # Architecture overview
+│       └── ...                 # Other documentation
+├── src/                         # Fumadocs configuration
+│   ├── app/                    # Next.js App Router
+│   ├── lib/                    # Utilities
+│   └── mdx-components.tsx      # MDX component overrides
+├── source.config.ts             # Fumadocs configuration
+└── package.json
+```
+
+### **Port Configuration**
+
+- **Development**: http://localhost:3003
+- **Production**: Configurable via environment variables
+
+---
+
+## 🎨 UI Package (`packages/ui`)
+
+The UI Package is a shared component library that provides reusable UI components across all applications.
+
+### **Purpose**
+
+- **Component Library** - Reusable UI components
+- **Design System** - Consistent visual language
+- **Type Safety** - TypeScript definitions for all components
+- **Accessibility** - WCAG compliant components
+
+### **Key Features**
+
+- **shadcn/ui Components** - Beautiful, accessible components
+- **Custom Hooks** - React hooks for common functionality
+- **Utility Functions** - Helper functions for styling and logic
+- **Theme Support** - Dark/light mode integration
+- **Responsive Design** - Mobile-first component design
+
+### **Technology Stack**
+
+- **React 19** - Latest React features
+- **Tailwind CSS 4** - Utility-first CSS
+- **Radix UI** - Accessible component primitives
+- **TypeScript** - Full type safety
+- **CSS Modules** - Scoped styling
+
+### **File Structure**
+
+```
+packages/ui/
+├── src/
+│   ├── components/              # UI components
+│   │   ├── button.tsx          # Button component
+│   │   ├── input.tsx           # Input component
+│   │   ├── card.tsx            # Card component
+│   │   └── ...                 # Other components
+│   ├── hooks/                   # Custom hooks
+│   │   └── use-mobile.ts       # Mobile detection hook
+│   ├── lib/                     # Utilities
+│   │   └── utils.ts            # Helper functions
+│   └── styles/                  # Global styles
+│       └── globals.css         # CSS variables and utilities
+└── package.json
+```
+
+---
+
+## 🔧 TypeScript Config (`packages/typescript-config`)
+
+The TypeScript Config package provides shared TypeScript configurations for consistent type checking across all applications.
+
+### **Purpose**
+
+- **Shared Configs** - Consistent TypeScript settings
+- **Base Configuration** - Common TypeScript rules
+- **Framework Configs** - Next.js and React specific settings
+- **Library Configs** - Package-specific configurations
+
+### **Key Features**
+
+- **Base Configuration** - Common TypeScript rules
+- **Next.js Config** - Next.js specific settings
+- **React Library Config** - React component library settings
+- **Strict Mode** - Comprehensive type checking
+- **Path Mapping** - Consistent import paths
+
+### **File Structure**
+
+```
+packages/typescript-config/
+├── base.json                   # Base TypeScript configuration
+├── nextjs.json                # Next.js specific configuration
+├── react-library.json         # React library configuration
+└── package.json
+```
+
+---
+
+## 🚀 How Apps Work Together
+
+### **Data Flow**
+
+```
+Web App (Public) → Backend Server → Database
+       ↓                ↑
+Dashboard App (Auth) → Backend Server → Database
+       ↓                ↑
+Documentation → Static Content
+```
+
+### **Authentication Flow**
+
+```
+1. User logs in via Dashboard App
+2. Backend Server validates credentials
+3. JWT token issued and stored
+4. Token used for subsequent API calls
+5. Protected routes check token validity
+```
+
+### **Development Workflow**
+
+```
+1. Code changes in any app
+2. Hot reload triggers in development
+3. TypeScript checks run automatically
+4. Linting and formatting applied
+5. Build process optimized with Turborepo
+```
+
+### **Shared Resources**
+
+- **UI Components** - Consistent design across apps
+- **Type Definitions** - Shared interfaces and types
+- **Utility Functions** - Common helper functions
+- **Configuration** - Shared build and development configs
+
+---
+
+## 🎯 Choosing the Right App
+
+### **Use Dashboard App When:**
+
+- Building authenticated user experiences
+- Creating admin interfaces
+- Managing user data and settings
+- Implementing real-time features
+
+### **Use Web App When:**
+
+- Creating public marketing sites
+- Building landing pages
+- Publishing content for SEO
+- Implementing public features
+
+### **Use Backend Server When:**
+
+- Building API endpoints
+- Managing database operations
+- Implementing business logic
+- Handling authentication
+
+### **Use Documentation When:**
+
+- Writing project documentation
+- Creating user guides
+- Building component libraries
+- Publishing technical content
+
+---
+
+**📱 Ready to explore specific apps?** Check out our [Development](/docs/development) guide to learn how to work with these applications, or dive into the [Tech Stack](/docs/tech-stack) to understand the underlying technologies.

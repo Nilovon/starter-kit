@@ -1,0 +1,252 @@
+---
+title: Getting Started
+description: Quick setup and first steps with Nilovon Starterkit
+---
+
+Welcome to Nilovon Starterkit! This guide will help you get up and running in minutes.
+
+## 📋 Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+- **Node.js** 20.0.0 or higher
+- **pnpm** 10.6.5 or higher
+- **Git** for version control
+
+### Installing Node.js
+
+Visit [nodejs.org](https://nodejs.org) and download the LTS version, or use a version manager:
+
+```bash
+# Using nvm (Node Version Manager)
+nvm install 20
+nvm use 20
+
+# Using fnm (Fast Node Manager)
+fnm install 20
+fnm use 20
+```
+
+### Installing pnpm
+
+```bash
+# Using npm
+npm install -g pnpm
+
+# Using curl (macOS/Linux)
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+
+# Using Homebrew (macOS)
+brew install pnpm
+```
+
+## 🚀 Quick Start
+
+### 1. Clone the Repository
+
+```bash
+git clone <your-repo-url>
+cd nilovon-starterkit
+```
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+This will install all dependencies for the monorepo and set up the workspace.
+
+### 3. Environment Setup
+
+Create environment files for each app:
+
+```bash
+# Copy environment templates
+cp apps/app/.env.example apps/app/.env.local
+cp apps/web/.env.example apps/web/.env.local
+cp apps/server/.env.example apps/server/.env.local
+```
+
+### 4. Database Setup
+
+```bash
+# Push the initial schema to your database
+pnpm run db:push
+
+# Open Drizzle Studio to view your database
+pnpm run db:studio
+```
+
+### 5. Start Development
+
+```bash
+# Start all applications
+pnpm run dev
+
+# Or start specific apps
+pnpm run dev:app      # Dashboard app only
+pnpm run dev:web      # Web app only
+pnpm run dev:server   # Backend server only
+```
+
+## 🌐 Access Your Applications
+
+Once running, you can access:
+
+- **Dashboard App**: [http://localhost:3000](http://localhost:3000)
+- **Web App**: [http://localhost:3001](http://localhost:3001)
+- **Backend Server**: [http://localhost:3002](http://localhost:3002)
+- **Documentation**: [http://localhost:3003](http://localhost:3003)
+
+## 🔧 First Steps
+
+### Explore the Project Structure
+
+```bash
+# View the monorepo structure
+tree -L 3 -I node_modules
+
+# Or use the built-in command
+pnpm run explore
+```
+
+### Check Available Scripts
+
+```bash
+# List all available commands
+pnpm run --help
+
+# Check workspace-specific commands
+pnpm run --filter app --help
+```
+
+### Run Quality Checks
+
+```bash
+# Lint your code
+pnpm run lint
+
+# Format your code
+pnpm run format
+
+# Type checking
+pnpm run check-types
+```
+
+## 📱 Your First Feature
+
+Let's create a simple todo item to get familiar with the stack:
+
+### 1. Add a Todo Schema
+
+Navigate to `apps/server/src/db/schema/todo.ts` and ensure you have:
+
+```typescript
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+
+export const todos = sqliteTable("todos", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  completed: integer("completed", { mode: "boolean" }).default(false),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(Date.now),
+});
+```
+
+### 2. Create an API Endpoint
+
+In `apps/server/src/routers/todo.ts`:
+
+```typescript
+import { router } from "../lib/orpc";
+import { todos } from "../db/schema";
+import { eq } from "drizzle-orm";
+
+export const todoRouter = router({
+  list: async () => {
+    return await db.select().from(todos);
+  },
+
+  create: async ({ title }: { title: string }) => {
+    return await db.insert(todos).values({ title }).returning();
+  },
+
+  toggle: async ({ id }: { id: number }) => {
+    const todo = await db.select().from(todos).where(eq(todos.id, id)).get();
+    return await db
+      .update(todos)
+      .set({ completed: !todo.completed })
+      .where(eq(todos.id, id))
+      .returning();
+  },
+});
+```
+
+### 3. Update the Database
+
+```bash
+pnpm run db:push
+```
+
+### 4. Test Your API
+
+```bash
+# Start the server
+pnpm run dev:server
+
+# Test the endpoint (in another terminal)
+curl -X POST http://localhost:3002/api/todos \
+  -H "Content-Type: application/json" \
+  -d '{"title": "My first todo!"}'
+```
+
+## 🎯 Next Steps
+
+Now that you're up and running, explore:
+
+- **[Architecture](/docs/architecture)** - Understand the monorepo structure
+- **[Apps Overview](/docs/apps-overview)** - Learn about each application
+- **[Development](/docs/development)** - Master the development workflow
+- **[API Reference](/docs/api-reference)** - Explore the backend APIs
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+**Port already in use:**
+
+```bash
+# Find what's using the port
+lsof -i :3000
+
+# Kill the process
+kill -9 <PID>
+```
+
+**Database connection issues:**
+
+```bash
+# Reset the database
+pnpm run db:push --force-reset
+
+# Or regenerate Drizzle files
+pnpm run db:generate
+```
+
+**Dependency issues:**
+
+```bash
+# Clear all node_modules and reinstall
+rm -rf node_modules apps/*/node_modules packages/*/node_modules
+pnpm install
+```
+
+### Getting Help
+
+- Check the [GitHub Issues](https://github.com/your-repo/issues)
+- Review the [Contributing Guide](/docs/contributing)
+- Join our [Discord Community](https://discord.gg/your-server)
+
+---
+
+**🎉 Congratulations!** You're now ready to build amazing applications with Nilovon Starterkit. Happy coding!

@@ -1,0 +1,585 @@
+---
+title: Database
+description: Database setup, schema management, and ORM usage
+---
+
+# 🗄️ Database
+
+Nilovon Starterkit uses **Drizzle ORM** with **SQLite** for development and **PostgreSQL** for production. This guide covers everything you need to know about database operations, schema management, and best practices.
+
+## 🚀 Quick Start
+
+### **1. Database Setup**
+
+```bash
+# Push the initial schema to your database
+pnpm run db:push
+
+# Open Drizzle Studio to view your database
+pnpm run db:studio
+
+# Generate Drizzle files (if needed)
+pnpm run db:generate
+```
+
+### **2. Environment Configuration**
+
+```bash
+# Copy environment template
+cp apps/server/.env.example apps/server/.env.local
+
+# Configure your database connection
+DATABASE_URL="file:./dev.db"  # SQLite for development
+# DATABASE_URL="postgresql://user:pass@localhost:5432/db"  # PostgreSQL for production
+```
+
+## 🏗️ Database Architecture
+
+### **Technology Stack**
+
+- **Drizzle ORM** - Type-safe SQL toolkit and ORM
+- **SQLite** - Development and testing database
+- **PostgreSQL** - Production database
+- **Drizzle Studio** - Database management interface
+
+### **Why Drizzle ORM?**
+
+- **Type Safety** - Compile-time SQL validation
+- **Zero Runtime Overhead** - No query builders
+- **Migration System** - Automatic schema evolution
+- **Multiple Databases** - SQLite, PostgreSQL, MySQL support
+- **Relations** - Type-safe relationship handling
+
+## 📊 Schema Management
+
+### **Schema Structure**
+
+```typescript
+// apps/server/src/db/schema/index.ts
+import { drizzle } from "drizzle-orm/d1";
+import { migrate } from "drizzle-orm/d1/migrator";
+import * as schema from "./schema";
+
+export const db = drizzle(env.DB, { schema });
+export * from "./schema";
+```
+
+### **User Schema Example**
+
+```typescript
+// apps/server/src/db/schema/auth.ts
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+
+export const users = sqliteTable("users", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  name: text("name").notNull(),
+  role: text("role", { enum: ["user", "admin"] }).default("user"),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(Date.now),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).default(Date.now),
+});
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+```
+
+### **Todo Schema Example**
+
+```typescript
+// apps/server/src/db/schema/todo.ts
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { relations } from "drizzle-orm";
+import { users } from "./auth";
+
+export const todos = sqliteTable("todos", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  description: text("description"),
+  completed: integer("completed", { mode: "boolean" }).default(false),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(Date.now),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).default(Date.now),
+});
+
+// Define relationships
+export const todosRelations = relations(todos, ({ one }) => ({
+  user: one(users, {
+    fields: [todos.userId],
+    references: [users.id],
+  }),
+}));
+
+export type Todo = typeof todos.$inferSelect;
+export type NewTodo = typeof todos.$inferInsert;
+```
+
+## 🔧 Database Operations
+
+### **Basic CRUD Operations**
+
+#### **Create Records**
+
+```typescript
+import { db } from "@/db";
+import { users } from "@/db/schema";
+
+// Insert a single user
+const newUser = await db.insert(users).values({
+  id: "user_123",
+  email: "user@example.com",
+  name: "John Doe",
+  role: "user",
+});
+
+// Insert multiple users
+const newUsers = await db.insert(users).values([
+  { id: "user_1", email: "user1@example.com", name: "User 1" },
+  { id: "user_2", email: "user2@example.com", name: "User 2" },
+]);
+```
+
+#### **Read Records**
+
+```typescript
+import { db } from "@/db";
+import { users, todos } from "@/db/schema";
+import { eq, like, desc, asc } from "drizzle-orm";
+
+// Get all users
+const allUsers = await db.select().from(users);
+
+// Get user by ID
+const user = await db
+  .select()
+  .from(users)
+  .where(eq(users.id, "user_123"))
+  .get();
+
+// Get users with conditions
+const adminUsers = await db.select().from(users).where(eq(users.role, "admin"));
+
+// Search users by name
+const searchResults = await db
+  .select()
+  .from(users)
+  .where(like(users.name, "%John%"));
+
+// Get users with pagination
+const paginatedUsers = await db
+  .select()
+  .from(users)
+  .orderBy(desc(users.createdAt))
+  .limit(10)
+  .offset(20);
+```
+
+#### **Update Records**
+
+```typescript
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
+
+// Update a single user
+const updatedUser = await db
+  .update(users)
+  .set({
+    name: "Jane Doe",
+    updatedAt: new Date(),
+  })
+  .where(eq(users.id, "user_123"))
+  .returning();
+
+// Update multiple users
+const updatedUsers = await db
+  .update(users)
+  .set({ role: "user" })
+  .where(eq(users.role, "guest"))
+  .returning();
+```
+
+#### **Delete Records**
+
+```typescript
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
+
+// Delete a single user
+const deletedUser = await db
+  .delete(users)
+  .where(eq(users.id, "user_123"))
+  .returning();
+
+// Delete multiple users
+const deletedUsers = await db
+  .delete(users)
+  .where(eq(users.role, "guest"))
+  .returning();
+```
+
+### **Advanced Queries**
+
+#### **Joins and Relations**
+
+```typescript
+import { db } from "@/db";
+import { users, todos } from "@/db/schema";
+
+// Get users with their todos
+const usersWithTodos = await db
+  .select({
+    user: users,
+    todos: todos,
+  })
+  .from(users)
+  .leftJoin(todos, eq(users.id, todos.userId));
+
+// Get todos with user information
+const todosWithUsers = await db
+  .select({
+    todo: todos,
+    user: {
+      id: users.id,
+      name: users.name,
+      email: users.email,
+    },
+  })
+  .from(todos)
+  .innerJoin(users, eq(todos.userId, users.id));
+```
+
+#### **Aggregations**
+
+```typescript
+import { db } from "@/db";
+import { todos } from "@/db/schema";
+import { count, sum, avg } from "drizzle-orm";
+
+// Count todos by completion status
+const todoCounts = await db
+  .select({
+    completed: todos.completed,
+    count: count(),
+  })
+  .from(todos)
+  .groupBy(todos.completed);
+
+// Get user statistics
+const userStats = await db
+  .select({
+    userId: todos.userId,
+    totalTodos: count(),
+    completedTodos: count(todos.completed),
+    completionRate: avg(todos.completed),
+  })
+  .from(todos)
+  .groupBy(todos.userId);
+```
+
+#### **Subqueries**
+
+```typescript
+import { db } from "@/db";
+import { users, todos } from "@/db/schema";
+import { eq, gt } from "drizzle-orm";
+
+// Get users who have more than 5 todos
+const activeUsers = await db
+  .select()
+  .from(users)
+  .where(
+    gt(
+      db
+        .select({ count: count() })
+        .from(todos)
+        .where(eq(todos.userId, users.id)),
+      5
+    )
+  );
+```
+
+## 🔄 Migrations
+
+### **Automatic Migrations (db:push)**
+
+```bash
+# Push schema changes to database
+pnpm run db:push
+
+# Force reset database (development only)
+pnpm run db:push --force-reset
+```
+
+### **Manual Migrations**
+
+```bash
+# Generate migration files
+pnpm run db:generate
+
+# Run migrations
+pnpm run db:migrate
+```
+
+### **Migration Files**
+
+```typescript
+// Generated migration file
+import { sql } from "drizzle-orm";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+
+export async function up(db) {
+  await db.run(sql`
+    CREATE TABLE IF NOT EXISTS "users" (
+      "id" text PRIMARY KEY NOT NULL,
+      "email" text NOT NULL UNIQUE,
+      "name" text NOT NULL,
+      "role" text DEFAULT 'user',
+      "created_at" integer DEFAULT (unixepoch()),
+      "updated_at" integer DEFAULT (unixepoch())
+    )
+  `);
+}
+
+export async function down(db) {
+  await db.run(sql`DROP TABLE "users"`);
+}
+```
+
+## 🎨 Drizzle Studio
+
+### **Opening Drizzle Studio**
+
+```bash
+# Open the database management interface
+pnpm run db:studio
+```
+
+### **Features**
+
+- **Table View** - Browse and edit data
+- **Schema View** - View table structures
+- **Query Editor** - Run custom SQL queries
+- **Data Export** - Export data in various formats
+- **Real-time Updates** - See changes as they happen
+
+## 🔒 Security Best Practices
+
+### **Input Validation**
+
+```typescript
+import { z } from "zod";
+
+// Define validation schema
+const createUserSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(1).max(100),
+  role: z.enum(["user", "admin"]).default("user"),
+});
+
+// Validate input before database operations
+const createUser = async (input: unknown) => {
+  const validated = createUserSchema.parse(input);
+
+  return await db.insert(users).values(validated).returning();
+};
+```
+
+### **SQL Injection Prevention**
+
+```typescript
+// ✅ Good: Use parameterized queries (automatic with Drizzle)
+const user = await db.select().from(users).where(eq(users.email, email)).get();
+
+// ❌ Bad: Don't concatenate strings (Drizzle prevents this)
+// const user = await db.run(`SELECT * FROM users WHERE email = '${email}'`);
+```
+
+### **Access Control**
+
+```typescript
+// Check user permissions before database operations
+const updateUser = async (
+  userId: string,
+  updates: Partial<User>,
+  currentUser: User
+) => {
+  // Only allow users to update their own profile or admins to update anyone
+  if (currentUser.id !== userId && currentUser.role !== "admin") {
+    throw new Error("Unauthorized");
+  }
+
+  return await db
+    .update(users)
+    .set(updates)
+    .where(eq(users.id, userId))
+    .returning();
+};
+```
+
+## 📊 Performance Optimization
+
+### **Indexing**
+
+```typescript
+// Add indexes for frequently queried fields
+export const users = sqliteTable(
+  "users",
+  {
+    id: text("id").primaryKey(),
+    email: text("email").notNull().unique(),
+    name: text("name").notNull(),
+    role: text("role", { enum: ["user", "admin"] }).default("user"),
+    createdAt: integer("created_at", { mode: "timestamp" }).default(Date.now),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).default(Date.now),
+  },
+  (table) => ({
+    emailIdx: index("email_idx").on(table.email),
+    roleIdx: index("role_idx").on(table.role),
+    createdAtIdx: index("created_at_idx").on(table.createdAt),
+  })
+);
+```
+
+### **Query Optimization**
+
+```typescript
+// Select only needed fields
+const userNames = await db.select({ name: users.name }).from(users);
+
+// Use pagination for large datasets
+const paginatedUsers = await db.select().from(users).limit(50).offset(0);
+
+// Use transactions for multiple operations
+const createUserWithTodos = async (userData: NewUser, todosData: NewTodo[]) => {
+  return await db.transaction(async (tx) => {
+    const [user] = await tx.insert(users).values(userData).returning();
+
+    const todos = await tx
+      .insert(todos)
+      .values(todosData.map((todo) => ({ ...todo, userId: user.id })))
+      .returning();
+
+    return { user, todos };
+  });
+};
+```
+
+## 🌐 Database Switching
+
+### **Development (SQLite)**
+
+```typescript
+// apps/server/src/db/index.ts
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import Database from "better-sqlite3";
+
+const sqlite = new Database("dev.db");
+export const db = drizzle(sqlite, { schema });
+```
+
+### **Production (PostgreSQL)**
+
+```typescript
+// apps/server/src/db/index.ts
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+
+const client = postgres(process.env.DATABASE_URL!);
+export const db = drizzle(client, { schema });
+```
+
+### **Environment Configuration**
+
+```bash
+# .env.local
+# Development
+DATABASE_URL="file:./dev.db"
+
+# Production
+DATABASE_URL="postgresql://user:pass@localhost:5432/db"
+```
+
+## 🔍 Debugging and Monitoring
+
+### **Query Logging**
+
+```typescript
+// Enable query logging in development
+const db = drizzle(sqlite, {
+  schema,
+  logger: process.env.NODE_ENV === "development",
+});
+```
+
+### **Performance Monitoring**
+
+```typescript
+// Measure query performance
+const startTime = performance.now();
+const result = await db.select().from(users);
+const endTime = performance.now();
+
+console.log(`Query took ${endTime - startTime}ms`);
+```
+
+### **Common Issues**
+
+#### **Connection Issues**
+
+```bash
+# Check database connection
+pnpm run db:studio
+
+# Verify environment variables
+echo $DATABASE_URL
+
+# Test connection manually
+sqlite3 dev.db ".tables"
+```
+
+#### **Schema Mismatches**
+
+```bash
+# Reset database schema
+pnpm run db:push --force-reset
+
+# Regenerate Drizzle files
+pnpm run db:generate
+```
+
+## 📚 Best Practices Summary
+
+### **Do's**
+
+- ✅ Use TypeScript types for all database operations
+- ✅ Validate input data before database operations
+- ✅ Use transactions for multiple related operations
+- ✅ Add indexes for frequently queried fields
+- ✅ Use pagination for large datasets
+- ✅ Handle errors gracefully
+
+### **Don'ts**
+
+- ❌ Don't concatenate SQL strings
+- ❌ Don't trust user input without validation
+- ❌ Don't perform large operations without pagination
+- ❌ Don't ignore database errors
+- ❌ Don't use `any` types for database operations
+
+---
+
+## 🎯 Next Steps
+
+Now that you understand database operations, explore:
+
+- **[Authentication](/docs/authentication)** - Learn about user authentication and authorization
+- **[API Reference](/docs/api-reference)** - See how database operations are exposed via APIs
+- **[Development](/docs/development)** - Master the development workflow
+- **[UI Components](/docs/ui-components)** - Build interfaces for your data
+
+---
+
+**🗄️ Ready to work with data?** Start by setting up your database with `pnpm run db:push`, then explore the schema files to understand the data structure.

@@ -1,0 +1,251 @@
+---
+title: Architecture
+description: Understanding the monorepo structure and design patterns
+---
+
+Nilovon Starterkit is built with a modern, scalable architecture that follows industry best practices and enables rapid development.
+
+## 🏛️ Monorepo Structure
+
+Our monorepo is organized using **Turborepo** and **pnpm workspaces** for optimal performance and developer experience.
+
+```
+nilovon-starterkit/
+├── 📁 apps/                          # Application layer
+│   ├── 🎯 app/                      # Dashboard application
+│   │   ├── src/
+│   │   │   ├── app/                 # Next.js App Router
+│   │   │   ├── components/          # React components
+│   │   │   ├── lib/                 # Utilities and configs
+│   │   │   └── utils/               # Helper functions
+│   │   ├── public/                  # Static assets
+│   │   └── package.json
+│   │
+│   ├── 🌐 web/                      # Web application
+│   │   ├── src/
+│   │   │   ├── app/                 # Next.js App Router
+│   │   │   ├── components/          # React components
+│   │   │   └── lib/                 # Utilities and configs
+│   │   ├── public/                  # Static assets
+│   │   └── package.json
+│   │
+│   ├── 🔌 server/                   # Backend API server
+│   │   ├── src/
+│   │   │   ├── db/                  # Database layer
+│   │   │   │   ├── schema/          # Drizzle schemas
+│   │   │   │   └── index.ts         # Database connection
+│   │   │   ├── lib/                 # Core utilities
+│   │   │   ├── routers/             # API route handlers
+│   │   │   └── index.ts             # Server entry point
+│   │   ├── drizzle.config.ts        # Drizzle configuration
+│   │   └── package.json
+│   │
+│   └── 📚 docs/                     # Documentation site
+│       ├── content/                 # Markdown content
+│       ├── src/                     # Fumadocs configuration
+│       └── package.json
+│
+├── 📁 packages/                      # Shared packages
+│   ├── 🎨 ui/                       # UI component library
+│   │   ├── src/
+│   │   │   ├── components/          # Reusable UI components
+│   │   │   ├── hooks/               # Custom React hooks
+│   │   │   ├── lib/                 # Utilities
+│   │   │   └── styles/              # Global styles
+│   │   └── package.json
+│   │
+│   └── typescript-config/           # TypeScript configurations
+│       ├── base.json                # Base TS config
+│       ├── nextjs.json              # Next.js specific config
+│       ├── react-library.json       # React library config
+│       └── package.json
+│
+├── 🐙 Root configuration
+│   ├── package.json                  # Workspace configuration
+│   ├── pnpm-workspace.yaml          # pnpm workspace config
+│   ├── turbo.json                    # Turborepo configuration
+│   ├── tsconfig.json                 # Root TypeScript config
+│   └── biome.json                    # Code quality configuration
+```
+
+## 🔄 Design Patterns
+
+### 1. **Monorepo Architecture**
+
+- **Single source of truth** for all related code
+- **Shared dependencies** and configurations
+- **Atomic commits** across multiple packages
+- **Parallel builds** with intelligent caching
+
+### 2. **Layered Architecture**
+
+```
+┌─────────────────────────────────────┐
+│           Presentation Layer        │ ← Next.js apps
+├─────────────────────────────────────┤
+│           Business Logic            │ ← API routers
+├─────────────────────────────────────┤
+│           Data Access Layer        │ ← Drizzle ORM
+├─────────────────────────────────────┤
+│           Infrastructure           │ ← Database, Auth, etc.
+└─────────────────────────────────────┘
+```
+
+### 3. **Component-Driven Development**
+
+- **Atomic design** principles
+- **Reusable components** in shared packages
+- **Consistent design system** across apps
+- **Type-safe props** with TypeScript
+
+## 🚀 Key Architectural Decisions
+
+### **Why Turborepo?**
+
+- **Incremental builds** - Only rebuild what changed
+- **Parallel execution** - Multiple tasks run simultaneously
+- **Intelligent caching** - Skip unnecessary work
+- **Remote caching** - Share builds across team members
+
+### **Why pnpm?**
+
+- **Efficient storage** - No duplicate packages
+- **Strict dependency management** - Prevents phantom dependencies
+- **Workspace support** - Native monorepo capabilities
+- **Fast installation** - Optimized package resolution
+
+### **Why Elysia?**
+
+- **TypeScript-first** - Full type safety
+- **High performance** - Built on Bun's HTTP server
+- **Plugin ecosystem** - Extensible architecture
+- **oRPC integration** - Type-safe client-server communication
+
+### **Why Drizzle ORM?**
+
+- **Type-safe queries** - Compile-time SQL validation
+- **Zero runtime overhead** - No query builders
+- **Migration system** - Automatic schema evolution
+- **Multiple databases** - SQLite, PostgreSQL, MySQL support
+
+## 🔐 Security Architecture
+
+### **Authentication Flow**
+
+```
+1. User Login → 2. JWT Token → 3. Protected Routes
+     ↓              ↓              ↓
+4. Session Store ← 5. Token Validation ← 6. Route Guard
+```
+
+### **API Security**
+
+- **oRPC validation** - Type-safe input validation
+- **Rate limiting** - Prevent abuse
+- **CORS configuration** - Control cross-origin requests
+- **Input sanitization** - Prevent injection attacks
+
+## 📊 Data Flow
+
+### **Frontend to Backend**
+
+```
+React Component → API Client → oRPC → Elysia Router → Drizzle → Database
+     ↑              ↑           ↑         ↑           ↑         ↑
+   State ← Response ← Data ← Validated ← Parsed ← Queried ← Stored
+```
+
+### **Real-time Updates**
+
+```
+Database Change → Drizzle Trigger → WebSocket → React State Update
+      ↑              ↑              ↑           ↑
+   Mutation ← API Call ← Event ← Subscription ← Component
+```
+
+## 🎯 Scalability Considerations
+
+### **Horizontal Scaling**
+
+- **Stateless API servers** - Easy to replicate
+- **Database connection pooling** - Efficient resource usage
+- **CDN integration** - Global content delivery
+- **Load balancing** - Distribute traffic evenly
+
+### **Vertical Scaling**
+
+- **Code splitting** - Load only what's needed
+- **Lazy loading** - Defer non-critical resources
+- **Image optimization** - Automatic WebP conversion
+- **Bundle analysis** - Identify optimization opportunities
+
+## 🔧 Development Workflow
+
+### **Local Development**
+
+```
+1. Code Changes → 2. Hot Reload → 3. Type Checking → 4. Linting
+     ↑              ↑              ↑           ↑
+   Save File ← Browser Update ← TypeScript ← Biome
+```
+
+### **Quality Gates**
+
+```
+Commit → Pre-commit Hooks → Lint → Format → Type Check → Build
+  ↑           ↑              ↑      ↑        ↑        ↑
+Git Push ← Tests ← Quality ← Code ← Styling ← Types ← Bundle
+```
+
+## 🌐 Deployment Architecture
+
+### **Multi-Environment Support**
+
+```
+Development → Staging → Production
+     ↑           ↑          ↑
+  Local DB ← Test DB ← Production DB
+```
+
+### **Infrastructure as Code**
+
+- **Docker containers** - Consistent environments
+- **Environment variables** - Configuration management
+- **Health checks** - Service monitoring
+- **Logging** - Centralized log aggregation
+
+## 📈 Performance Architecture
+
+### **Frontend Optimization**
+
+- **Next.js Image** - Automatic image optimization
+- **Code splitting** - Dynamic imports
+- **Service workers** - Offline support
+- **Bundle analysis** - Size monitoring
+
+### **Backend Optimization**
+
+- **Connection pooling** - Database efficiency
+- **Query optimization** - Drizzle query planning
+- **Caching strategies** - Redis integration
+- **Compression** - Gzip/Brotli support
+
+## 🔮 Future Considerations
+
+### **Microservices Evolution**
+
+- **Service boundaries** - Clear API contracts
+- **Event-driven architecture** - Async communication
+- **API versioning** - Backward compatibility
+- **Feature flags** - Gradual rollouts
+
+### **Cloud-Native Features**
+
+- **Serverless functions** - Event-driven scaling
+- **Edge computing** - Global performance
+- **Container orchestration** - Kubernetes support
+- **Observability** - Metrics, logs, and traces
+
+---
+
+**🏗️ Ready to dive deeper?** Explore our [Apps Overview](/docs/apps-overview) to understand each application's specific architecture, or check out the [Tech Stack](/docs/tech-stack) for detailed technology information.
