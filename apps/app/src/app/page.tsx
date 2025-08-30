@@ -1,6 +1,6 @@
-'use client';
-import { useQuery } from '@tanstack/react-query';
-import { orpc } from '@/utils/orpc';
+"use client";
+import { useQuery } from "@tanstack/react-query";
+import { orpc } from "@/utils/orpc";
 
 export default function Home() {
   const healthCheck = useQuery(orpc.healthCheck.queryOptions());
@@ -15,14 +15,14 @@ export default function Home() {
           <h2 className="mb-2 font-medium">API Status</h2>
           <div className="flex items-center gap-2">
             <div
-              className={`h-2 w-2 rounded-full ${healthCheck.data ? 'bg-green-500' : 'bg-red-500'}`}
+              className={`h-2 w-2 rounded-full ${healthCheck.data ? "bg-green-500" : "bg-red-500"}`}
             />
             <span className="text-muted-foreground text-sm">
               {healthCheck.isLoading
-                ? 'Checking...'
+                ? "Checking..."
                 : healthCheck.data
-                  ? 'Connected'
-                  : 'Disconnected'}
+                  ? "Connected"
+                  : "Disconnected"}
             </span>
           </div>
         </section>
